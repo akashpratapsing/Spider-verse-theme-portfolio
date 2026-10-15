@@ -3,7 +3,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import LocomotiveScroll from 'locomotive-scroll';
 
 interface BackgroundWebProps {
-  scroll: LocomotiveScroll | null;
+  scroll?: LocomotiveScroll | null;
 }
 
 const BackgroundWeb: React.FC<BackgroundWebProps> = ({ scroll }) => {
@@ -35,10 +35,14 @@ const BackgroundWeb: React.FC<BackgroundWebProps> = ({ scroll }) => {
 
     window.addEventListener('mousemove', handleMouseMove);
     
-    if (scroll) {
-      scroll.on('scroll', (args: any) => {
-        setScrollY(args.scroll.y);
-      });
+    if (scroll && typeof (scroll as any).on === 'function') {
+      try {
+        (scroll as any).on('scroll', (args: any) => {
+          setScrollY(args?.scroll?.y ?? window.scrollY);
+        });
+      } catch (e) {
+        window.addEventListener('scroll', handleWindowScroll);
+      }
     } else {
       window.addEventListener('scroll', handleWindowScroll);
     }

@@ -28,12 +28,16 @@ const Hero: React.FC<HeroProps> = ({ scroll }) => {
 
     window.addEventListener('mousemove', handleMouseMove);
     
-    if (scroll) {
-      scroll.on('scroll', (args: any) => {
-        const scrolled = args.scroll.y;
-        const windowHeight = window.innerHeight;
-        setScrollProgress(Math.min(scrolled / windowHeight, 1));
-      });
+    if (scroll && typeof (scroll as any).on === 'function') {
+      try {
+        (scroll as any).on('scroll', (args: any) => {
+          const scrolled = args?.scroll?.y ?? window.scrollY;
+          const windowHeight = window.innerHeight;
+          setScrollProgress(Math.min(scrolled / windowHeight, 1));
+        });
+      } catch (e) {
+        window.addEventListener('scroll', handleScroll);
+      }
     } else {
       window.addEventListener('scroll', handleScroll);
     }
@@ -172,7 +176,19 @@ const Hero: React.FC<HeroProps> = ({ scroll }) => {
 
         <div className="mt-12 flex flex-col md:flex-row gap-6">
           <button 
-            className="thwip-active bg-[#FF375F] border-4 border-black font-comic text-2xl text-black px-8 py-3 rounded-none shadow-[6px_6px_0px_0px_rgba(255,222,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all outline-none"
+            onClick={() => {
+              if (scroll) {
+                try {
+                  scroll.scrollTo('#experience');
+                  return;
+                } catch (e) {}
+              }
+              const target = document.querySelector('#experience');
+              if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+            className="thwip-active bg-[#FF375F] border-4 border-black font-comic text-2xl text-black px-8 py-3 rounded-none shadow-[6px_6px_0px_0px_rgba(255,222,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all outline-none cursor-pointer"
           >
             View My Web
           </button>

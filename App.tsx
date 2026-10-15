@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import ExperienceWeb from './components/ExperienceWeb';
 import SkillsWeb from './components/SkillsWeb';
 import ProjectsGrid from './components/ProjectsGrid';
 import EducationWeb from './components/EducationWeb';
@@ -48,18 +49,11 @@ const App: React.FC = () => {
     
     // Initialize Locomotive Scroll
     let scrollInstance: LocomotiveScroll | null = null;
-    if (scrollRef.current) {
-      scrollInstance = new LocomotiveScroll({
-        el: scrollRef.current,
-        smooth: true,
-        multiplier: 1,
-        class: 'is-revealed',
-        // @ts-ignore
-        tablet: { smooth: true },
-        // @ts-ignore
-        smartphone: { smooth: true }
-      });
+    try {
+      scrollInstance = new LocomotiveScroll();
       setScroll(scrollInstance);
+    } catch (e) {
+      // Graceful fallback
     }
 
     // Global click listener for the 'thwip' effect
@@ -69,7 +63,13 @@ const App: React.FC = () => {
 
     // Handle resize to update scroll calculations
     const handleResize = () => {
-      if (scrollInstance) scrollInstance.update();
+      if (scrollInstance) {
+        if (typeof (scrollInstance as any).resize === 'function') {
+          (scrollInstance as any).resize();
+        } else if (typeof (scrollInstance as any).update === 'function') {
+          (scrollInstance as any).update();
+        }
+      }
     };
 
     window.addEventListener('click', handleGlobalClick);
@@ -85,14 +85,15 @@ const App: React.FC = () => {
 
   return (
     <div className={`min-h-screen transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-      <BackgroundWeb />
+      <BackgroundWeb scroll={scroll} />
       
       {/* Navbar moved outside the scroll container to maintain fixed positioning */}
       <Navbar scroll={scroll} />
 
       <div className="relative z-10" ref={scrollRef} data-scroll-container>
         <main data-scroll-section>
-          <Hero />
+          <Hero scroll={scroll} />
+          <ExperienceWeb />
           <SkillsWeb />
           <ProjectsGrid />
           <EducationWeb />

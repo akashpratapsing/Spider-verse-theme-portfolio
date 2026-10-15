@@ -15,6 +15,13 @@ export interface Project {
   link: string;
 }
 
+export interface Experience {
+  id: string;
+  role: string;
+  company: string;
+  timeline: string;
+}
+
 export interface Education {
   degree: string;
   institution: string;

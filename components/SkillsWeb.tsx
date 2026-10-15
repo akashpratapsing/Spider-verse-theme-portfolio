@@ -9,23 +9,28 @@ const SkillsWeb: React.FC = () => {
       color: '#FF375F', // Spidey Red
     },
     {
-      title: 'Frontend',
-      skills: ['HTML', 'CSS', 'Javascript', 'React'],
-      color: '#36ff2b', // Spidey Green
-    },
-    {
-      title: 'Backend Frameworks',
-      skills: ['Spring Boot (MVC, Security, Data JPA)', 'Spring AI', 'Hibernate ORM', 'Flask', 'FastAPI'],
+      title: 'Backend',
+      skills: ['Spring Boot', 'FastAPI', 'REST APIs', 'Spring Security', 'JPA/Hibernate', 'JDBC'],
       color: '#2A7FFF', // Spidey Blue
     },
     {
+      title: 'AI',
+      skills: ['Gemini API', 'RAG', 'LiteLLM', 'LangChain', 'LangGraph', 'Tool Calling'],
+      color: '#00FFFF', // Glitch Cyan
+    },
+    {
       title: 'Databases',
-      skills: ['MySQL', 'PostgreSQL', 'MongoDB'],
+      skills: ['MySQL', 'PostgreSQL', 'MongoDB', 'SQLite'],
       color: '#FFDE00', // Comic Yellow
     },
     {
+      title: 'Frontend',
+      skills: ['ReactJS', 'Streamlit', 'HTML', 'CSS'],
+      color: '#36ff2b', // Spidey Green
+    },
+    {
       title: 'Tools',
-      skills: ['Git/GitHub', 'Docker', 'CI/CD Pipelines', 'AWS Cloud', 'Maven'],
+      skills: ['Docker', 'Docker Compose', 'Git/GitHub', 'Maven', 'Postman', 'Netlify', 'Render'],
       color: '#F5F5F5', // Light Gray
     },
   ];
@@ -35,7 +40,7 @@ const SkillsWeb: React.FC = () => {
       {/* Subtle halftone overlay - very low opacity as requested */}
       <div className="absolute inset-0 halftone opacity-[0.03] pointer-events-none"></div>
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="mb-16">
           <h3 className="font-comic text-5xl md:text-6xl text-[#F5F5F5] uppercase tracking-tighter inline-block relative">
             Technical Arsenal
@@ -44,7 +49,7 @@ const SkillsWeb: React.FC = () => {
           <p className="font-marker text-[#2A7FFF] text-xl mt-4 opacity-80">Architecture & Implementation Layers</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {skillCategories.map((cat, idx) => (
             <div
               key={idx}

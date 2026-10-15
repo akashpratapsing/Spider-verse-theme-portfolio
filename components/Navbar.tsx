@@ -9,14 +9,33 @@ const Navbar: React.FC<NavbarProps> = ({ scroll }) => {
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
     if (scroll) {
-      scroll.scrollTo(targetId);
+      try {
+        scroll.scrollTo(targetId);
+        return;
+      } catch (err) {
+        // Fallback to native scroll if locomotive scroll instance fails
+      }
     }
+    const target = document.querySelector(targetId);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleLogoClick = () => {
+    if (scroll) {
+      try {
+        scroll.scrollTo('top');
+        return;
+      } catch (err) {}
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-4 bg-[#0A0B1E]/90 backdrop-blur-md border-b-4 border-black">
       {/* Logo Speech Bubble */}
-      <div className="relative group cursor-pointer">
+      <div className="relative group cursor-pointer" onClick={handleLogoClick}>
         <div className="bg-white border-4 border-black px-4 py-1 rounded-2xl transform group-hover:-rotate-2 transition-transform shadow-[4px_4px_0px_0px_#FF375F]">
           <span className="font-comic text-2xl text-black tracking-widest uppercase">
             Akash.Web()
@@ -27,7 +46,7 @@ const Navbar: React.FC<NavbarProps> = ({ scroll }) => {
 
       {/* Nav Links */}
       <div className="hidden md:flex items-center space-x-10">
-        {["Skills", "Projects", "Education"].map((item) => (
+        {["Experience", "Skills", "Projects", "Education"].map((item) => (
           <a
             key={item}
             href={`#${item.toLowerCase()}`}

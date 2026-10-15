@@ -1,5 +1,5 @@
 
-import { Project, Education } from './types';
+import { Project, Education, Experience } from './types';
 import cvlab from './assets/Cvlab.png';
 import blog from './assets/BlogAPIs.png';
 import fitmeal from './assets/fitmeal.png';
@@ -12,6 +12,15 @@ export const COLORS = {
   textLight: '#F5F5F5',
   textDark: '#111111',
 };
+
+export const EXPERIENCE_DATA: Experience[] = [
+  {
+    id: "exp-1",
+    role: "Assistant System Engineer",
+    company: "TCS",
+    timeline: "Feb 2026 – Present",
+  },
+];
 
 export const PROJECTS: Project[] = [
   {
