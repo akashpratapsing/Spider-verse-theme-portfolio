@@ -20,8 +20,8 @@ export const COLORS = {
 export const SOCIAL_LINKS = {
   github: 'https://github.com/akashpratapsing',
   leetcode: 'https://leetcode.com/u/Akiii_473/',
-  codeforces: 'https://codeforces.com/profile/Akiii_473',
-  codechef: 'https://www.codechef.com/users/Akiii_473',
+  codeforces: 'https://codeforces.com/profile/akkkii',
+  codechef: 'https://www.codechef.com/users/akeeee',
   linkedin: 'https://www.linkedin.com/in/akash-pratap-singh-9117a0238/',
   twitter: 'https://x.com/AkashPrata21896',
   email: 'aakashprataps@gmail.com',
