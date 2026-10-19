@@ -5,26 +5,122 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/assets/spider-man-comic-new-seeklogo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Akash Pratap Singh | Spider-Verse Architect</title>
+    <title>Akash Pratap Singh | Spider-Verse & Green Lantern Corps Architect</title>
+    <!-- Prevent Theme Flash (FOUC) -->
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('portfolio_theme');
+          var theme = (saved === 'green-lantern') ? 'green-lantern' : 'spiderman';
+          document.documentElement.setAttribute('data-theme', theme);
+          if (theme === 'green-lantern') {
+            document.documentElement.classList.add('theme-green-lantern');
+          } else {
+            document.documentElement.classList.add('theme-spiderman');
+          }
+        } catch(e) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600;700&family=Orbitron:wght@600;700;800;900&family=Permanent+Marker&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
       @import "tailwindcss";
+
+      /* CSS Custom Properties for Themes */
+      :root, :root[data-theme="spiderman"] {
+        --theme-bg: #0A0B1E;
+        --theme-text: #F5F5F5;
+        --theme-primary: #FF375F;
+        --theme-secondary: #2A7FFF;
+        --theme-accent: #FFDE00;
+        --theme-border: #000000;
+      }
+
+      :root[data-theme="green-lantern"] {
+        --theme-bg: #050D0A;
+        --theme-text: #F5FFF8;
+        --primary-emerald: #00FF66;
+        --deep-green: #008F4C;
+        --energy-glow: #7CFFB2;
+        --theme-border: #00FF66;
+      }
+
       body {
         margin: 0;
         font-family: 'Inter', sans-serif;
         background-color: #0A0B1E;
         color: #F5F5F5;
         overflow-x: hidden;
+        transition: background-color 0.4s ease, color 0.4s ease;
       }
+
+      :root[data-theme="green-lantern"] body {
+        background-color: #050D0A;
+        color: #F5FFF8;
+      }
+
       .font-comic { font-family: 'Bangers', cursive; }
       .font-marker { font-family: 'Permanent+Marker', cursive; }
+      .font-orbitron { font-family: 'Orbitron', sans-serif; }
+      .font-rajdhani { font-family: 'Rajdhani', sans-serif; }
       
       /* Halftone Pattern - Refined & Subtle */
       .halftone {
         background-image: radial-gradient(circle, rgba(255,255,255,0.03) 0.8px, transparent 0.8px);
         background-size: 24px 24px;
+      }
+
+      /* Green Lantern Construct Grid */
+      .construct-grid {
+        background-image: 
+          linear-gradient(rgba(0, 255, 102, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 255, 102, 0.05) 1px, transparent 1px);
+        background-size: 32px 32px;
+      }
+
+      /* Emerald Energy Glow Helpers */
+      .emerald-text-glow {
+        text-shadow: 0 0 10px rgba(0, 255, 102, 0.7), 0 0 25px rgba(124, 255, 178, 0.4);
+      }
+      .emerald-box-glow {
+        box-shadow: 0 0 20px rgba(0, 255, 102, 0.25), inset 0 0 15px rgba(0, 255, 102, 0.1);
+      }
+      .emerald-box-glow-lg {
+        box-shadow: 0 0 35px rgba(0, 255, 102, 0.35), 0 0 10px rgba(124, 255, 178, 0.2);
+      }
+
+      /* Power Ring Pulsing Construct Animation */
+      @keyframes ring-pulse {
+        0%, 100% {
+          transform: scale(1) rotate(0deg);
+          filter: drop-shadow(0 0 12px rgba(0, 255, 102, 0.5));
+        }
+        50% {
+          transform: scale(1.03) rotate(3deg);
+          filter: drop-shadow(0 0 24px rgba(124, 255, 178, 0.8));
+        }
+      }
+      .animate-ring-pulse {
+        animation: ring-pulse 6s ease-in-out infinite;
+      }
+
+      /* Emerald construct energy scanline */
+      @keyframes construct-sweep {
+        0% { transform: translateY(-100%); }
+        100% { transform: translateY(100%); }
+      }
+
+      /* Reduced Motion Accessibility */
+      @media (prefers-reduced-motion: reduce) {
+        .animate-ring-pulse,
+        .animate-float-slow,
+        .glitch::before,
+        .glitch::after,
+        .grain::before {
+          animation: none !important;
+          transition: none !important;
+        }
       }
 
       /* CRT Scanlines Effect */

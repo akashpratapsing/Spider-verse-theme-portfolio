@@ -9,40 +9,13 @@ import Footer from './components/Footer';
 import BackgroundWeb from './components/BackgroundWeb';
 import LocomotiveScroll from 'locomotive-scroll';
 import 'locomotive-scroll/dist/locomotive-scroll.css';
+import { useTheme } from './context/ThemeContext';
 
 const App: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [scroll, setScroll] = useState<LocomotiveScroll | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  const playThwipSound = () => {
-    try {
-      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
-
-      oscillator.type = 'sine';
-      // Thwip sound: Start high, drop fast
-      oscillator.frequency.setValueAtTime(1200, audioCtx.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.15);
-
-      gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-
-      oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-
-      oscillator.start();
-      oscillator.stop(audioCtx.currentTime + 0.15);
-      
-      // Cleanup
-      setTimeout(() => {
-        audioCtx.close();
-      }, 200);
-    } catch (e) {
-      // Silent fail if audio is blocked or unsupported
-    }
-  };
+  const { theme, playThemeSound } = useTheme();
 
   useEffect(() => {
     setIsLoaded(true);
@@ -56,9 +29,14 @@ const App: React.FC = () => {
       // Graceful fallback
     }
 
-    // Global click listener for the 'thwip' effect
-    const handleGlobalClick = () => {
-      playThwipSound();
+    // Global click listener for the theme sound effect
+    const handleGlobalClick = (e: MouseEvent) => {
+      // Don't double sound on interactive elements like buttons/links that have their own sounds
+      const target = e.target as HTMLElement;
+      if (target.closest('button') || target.closest('a')) {
+        return;
+      }
+      playThemeSound('click');
     };
 
     // Handle resize to update scroll calculations

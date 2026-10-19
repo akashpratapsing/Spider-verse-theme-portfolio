@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local Admin Tool (Sensitive security files, sessions & backups)
+admin-tool/.admin-auth.json
+admin-tool/.admin-session.json
+admin-tool/backups/
+bun.lock

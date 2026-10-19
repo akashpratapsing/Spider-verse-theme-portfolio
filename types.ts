@@ -6,6 +6,13 @@ export interface Skill {
   y: number;
 }
 
+export interface SkillCategory {
+  title: string;
+  skills: string[];
+  color: string;
+  icons?: Record<string, string>;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -13,6 +20,9 @@ export interface Project {
   tags: string[];
   image: string;
   link: string;
+  githubUrl?: string;
+  liveDemoUrl?: string;
+  featured?: boolean;
 }
 
 export interface Experience {
@@ -20,6 +30,13 @@ export interface Experience {
   role: string;
   company: string;
   timeline: string;
+  employmentType?: string;
+  location?: string;
+  startDate?: string;
+  endDate?: string;
+  currentlyWorking?: boolean;
+  description?: string;
+  bulletPoints?: string[];
 }
 
 export interface Education {
@@ -28,4 +45,21 @@ export interface Education {
   period: string;
   gpa: string;
   coursework: string[];
+}
+
+export type SuperheroUniverse = 'Marvel' | 'DC' | 'Other';
+
+export interface SuperheroThemeConfig {
+  id: string;
+  name: string;
+  hero: string;
+  universe: SuperheroUniverse;
+  universeTag: string;
+  tagline: string;
+  primaryColor: string;
+  accentColor: string;
+  glowColor: string;
+  bgDark: string;
+  status: 'active' | 'upcoming';
+  description: string;
 }

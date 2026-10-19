@@ -1,0 +1,50 @@
+[
+  {
+    "id": "neural-nourish-ai",
+    "title": "Fitmeal",
+    "description": "A full-stack Gen-AI meal planner integrating Gemini AI, Razorpay payments, and MongoDB persistence with internal/external API orchestration.",
+    "tags": [
+      "Spring Boot",
+      "Generative AI",
+      "React",
+      "MongoDB"
+    ],
+    "image": "fitmeal",
+    "link": "https://fitmealx.netlify.app/",
+    "liveDemoUrl": "https://fitmealx.netlify.app/",
+    "githubUrl": "",
+    "featured": true
+  },
+  {
+    "id": "sentinel-backend",
+    "title": "Blog App Backend",
+    "description": "Production-ready RESTful API featuring JWT-based 'Sentinel' security, RBAC, and optimized MySQL persistence layer.",
+    "tags": [
+      "Java",
+      "Spring Security",
+      "MySQL",
+      "Hibernate"
+    ],
+    "image": "blog",
+    "link": "https://github.com/akashpratapsing/Blog-APIs",
+    "liveDemoUrl": "",
+    "githubUrl": "https://github.com/akashpratapsing/Blog-APIs",
+    "featured": true
+  },
+  {
+    "id": "resume",
+    "title": "CV Lab",
+    "description": "CVLab is a LaTeX-powered resume builder with AI-driven ATS score analysis using Google's Gemini API.",
+    "tags": [
+      "Python",
+      "Flask",
+      "React",
+      "Gemini API"
+    ],
+    "image": "cvlab",
+    "link": "https://github.com/akashpratapsing/CVLab-Resume-Builder-And-ATS-Score-Checker",
+    "liveDemoUrl": "",
+    "githubUrl": "https://github.com/akashpratapsing/CVLab-Resume-Builder-And-ATS-Score-Checker",
+    "featured": true
+  }
+]

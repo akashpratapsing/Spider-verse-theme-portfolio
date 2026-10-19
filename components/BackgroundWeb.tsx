@@ -1,12 +1,15 @@
-
 import React, { useEffect, useState, useMemo } from 'react';
 import LocomotiveScroll from 'locomotive-scroll';
+import { useTheme } from '../context/ThemeContext';
 
 interface BackgroundWebProps {
   scroll?: LocomotiveScroll | null;
 }
 
 const BackgroundWeb: React.FC<BackgroundWebProps> = ({ scroll }) => {
+  const { theme } = useTheme();
+  const isLantern = theme === 'green-lantern';
+
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [scrollY, setScrollY] = useState(0);
@@ -25,9 +28,9 @@ const BackgroundWeb: React.FC<BackgroundWebProps> = ({ scroll }) => {
       setScrollY(window.scrollY);
     };
 
-    // Random glitch effect
+    // Spider-Man random glitch effect
     const glitchInterval = setInterval(() => {
-      if (Math.random() > 0.97) {
+      if (!isLantern && Math.random() > 0.97) {
         setGlitch(true);
         setTimeout(() => setGlitch(false), 150);
       }
@@ -52,10 +55,10 @@ const BackgroundWeb: React.FC<BackgroundWebProps> = ({ scroll }) => {
       window.removeEventListener('scroll', handleWindowScroll);
       clearInterval(glitchInterval);
     };
-  }, [scroll]);
+  }, [scroll, isLantern]);
 
-  // Pre-generate "Multiverse Shards"
-  const shards = useMemo(() => {
+  // Spider-Man Multiverse Shards
+  const spiderShards = useMemo(() => {
     return Array.from({ length: 12 }).map((_, i) => ({
       id: i,
       width: Math.random() * 300 + 100,
@@ -69,6 +72,108 @@ const BackgroundWeb: React.FC<BackgroundWebProps> = ({ scroll }) => {
     }));
   }, []);
 
+  // Green Lantern Hard-Light Construct Shards & Star Polygons
+  const lanternShards = useMemo(() => {
+    return Array.from({ length: 14 }).map((_, i) => ({
+      id: i,
+      width: Math.random() * 220 + 80,
+      height: Math.random() * 220 + 80,
+      top: Math.random() * 100,
+      left: Math.random() * 100,
+      rotate: Math.random() * 360,
+      speed: Math.random() * 0.08 + 0.03,
+      // Emerald constructs with hard-light facets
+      color: i % 3 === 0 ? 'rgba(0, 255, 102, 0.07)' : i % 3 === 1 ? 'rgba(0, 143, 76, 0.08)' : 'rgba(124, 255, 178, 0.05)',
+      clipPath: i % 2 === 0
+        ? 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' // Hexagon
+        : 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' // Diamond
+    }));
+  }, []);
+
+  if (isLantern) {
+    /* ================= GREEN LANTERN COSMIC BACKGROUND ================= */
+    return (
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#050D0A] transition-colors duration-400">
+        {/* 1. LAYER: Deep Cosmic Energy Aurora Gradient */}
+        <div 
+          className="absolute inset-0 opacity-60"
+          style={{
+            background: `radial-gradient(1200px circle at 50% ${30 + (scrollY * 0.02)}%, rgba(0, 143, 76, 0.18), transparent 70%)`,
+          }}
+        ></div>
+
+        {/* 2. LAYER: Coordinate Interstellar Grid */}
+        <div 
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(0, 255, 102, 0.07) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0, 255, 102, 0.07) 1px, transparent 1px)
+            `,
+            backgroundSize: '64px 64px',
+            transform: `translate(${offset.x * 0.15}px, ${offset.y * 0.15}px)`,
+          }}
+        ></div>
+
+        {/* 3. LAYER: Hard-Light Emerald Construct Polygons */}
+        {lanternShards.map((shard) => (
+          <div
+            key={shard.id}
+            className="absolute transition-transform duration-300"
+            style={{
+              width: `${shard.width}px`,
+              height: `${shard.height}px`,
+              top: `${shard.top}%`,
+              left: `${shard.left}%`,
+              backgroundColor: shard.color,
+              clipPath: shard.clipPath,
+              transform: `translate(${offset.x * shard.speed}px, ${offset.y * shard.speed + (scrollY * shard.speed * -0.4)}px) rotate(${shard.rotate + (scrollY * 0.01)}deg)`,
+              border: '1px solid rgba(0, 255, 102, 0.18)',
+              boxShadow: '0 0 15px rgba(0, 255, 102, 0.05)',
+              backdropFilter: 'blur(1px)',
+            }}
+          />
+        ))}
+
+        {/* 4. LAYER: Cosmic Emerald Dust / Quanta Particles */}
+        <div className="absolute inset-0">
+          {Array.from({ length: 24 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                width: `${(i % 3) + 2}px`,
+                height: `${(i % 3) + 2}px`,
+                top: `${(i * 19) % 100}%`,
+                left: `${(i * 29) % 100}%`,
+                backgroundColor: i % 2 === 0 ? '#00FF66' : '#7CFFB2',
+                opacity: 0.3 + (i % 5) * 0.1,
+                boxShadow: i % 2 === 0 ? '0 0 8px #00FF66' : '0 0 10px #7CFFB2',
+                transform: `translateY(${Math.sin((scrollY + i * 80) * 0.01) * 15}px)`,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* 5. LAYER: Interactive Emerald Power-Ring Energy Glow at Cursor */}
+        <div 
+          className="absolute inset-0 z-10"
+          style={{
+            background: `
+              radial-gradient(800px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(0, 255, 102, 0.09), transparent 75%),
+              radial-gradient(400px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(124, 255, 178, 0.14), transparent 60%)
+            `,
+            mixBlendMode: 'plus-lighter'
+          }}
+        ></div>
+
+        {/* 6. LAYER: Vignette border */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_transparent_20%,_rgba(5,13,10,0.85)_100%)]"></div>
+      </div>
+    );
+  }
+
+  /* ================= SPIDER-MAN COMIC BACKGROUND ================= */
   return (
     <div className={`fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#0A0B1E] transition-all duration-75 ${glitch ? 'invert-[0.05] brightness-125' : ''}`}>
       
@@ -98,7 +203,7 @@ const BackgroundWeb: React.FC<BackgroundWebProps> = ({ scroll }) => {
       </div>
 
       {/* 2. LAYER: Multiverse Shards (Medium Depth) */}
-      {shards.map((shard) => (
+      {spiderShards.map((shard) => (
         <div
           key={shard.id}
           className="absolute"
@@ -163,8 +268,6 @@ const BackgroundWeb: React.FC<BackgroundWebProps> = ({ scroll }) => {
 
       {/* 7. Vignette / Depth Gradient */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_transparent_0%,_rgba(10,11,30,0.9)_100%)]"></div>
-      
-      {/* Final Noise / Grain Layer inherited from body */}
     </div>
   );
 };

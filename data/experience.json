@@ -1,0 +1,18 @@
+[
+  {
+    "id": "exp-1",
+    "role": "Assistant System Engineer",
+    "company": "TCS",
+    "timeline": "Feb 2026 – Present",
+    "employmentType": "Full-time",
+    "location": "India",
+    "startDate": "2026-02",
+    "endDate": "",
+    "currentlyWorking": true,
+    "description": "Backend engineering and distributed systems integration across enterprise platforms.",
+    "bulletPoints": [
+      "Architecting scalable backend services and microservice communications.",
+      "Optimizing database transactions and RESTful API integrations."
+    ]
+  }
+]

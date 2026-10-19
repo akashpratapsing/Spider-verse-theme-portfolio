@@ -1,0 +1,68 @@
+[
+  {
+    "title": "Languages",
+    "skills": [
+      "Java",
+      "Python",
+      "JavaScript"
+    ],
+    "color": "#FF375F"
+  },
+  {
+    "title": "Backend",
+    "skills": [
+      "Spring Boot",
+      "FastAPI",
+      "REST APIs",
+      "Spring Security",
+      "JPA/Hibernate",
+      "JDBC"
+    ],
+    "color": "#2A7FFF"
+  },
+  {
+    "title": "AI",
+    "skills": [
+      "Gemini API",
+      "RAG",
+      "LiteLLM",
+      "LangChain",
+      "LangGraph",
+      "Tool Calling"
+    ],
+    "color": "#00FFFF"
+  },
+  {
+    "title": "Databases",
+    "skills": [
+      "MySQL",
+      "PostgreSQL",
+      "MongoDB",
+      "SQLite"
+    ],
+    "color": "#FFDE00"
+  },
+  {
+    "title": "Frontend",
+    "skills": [
+      "ReactJS",
+      "Streamlit",
+      "HTML",
+      "CSS"
+    ],
+    "color": "#36ff2b"
+  },
+  {
+    "title": "Tools",
+    "skills": [
+      "Docker",
+      "Docker Compose",
+      "Git/GitHub",
+      "Maven",
+      "Postman",
+      "Netlify",
+      "Render"
+    ],
+    "color": "#F5F5F5"
+  }
+]

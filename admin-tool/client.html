@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spider-Verse Local Admin Architect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600;700&family=Permanent+Marker&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    :root {
+      --bg: #0A0B1E;
+      --red: #FF375F;
+      --blue: #2A7FFF;
+      --yellow: #FFDE00;
+      --cyan: #00FFFF;
+      --card-bg: #151735;
+      --card-alt: #1a1c3d;
+      --text: #F5F5F5;
+      --border: #000000;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .font-comic { font-family: 'Bangers', cursive; }
+    .font-marker { font-family: 'Permanent Marker', cursive; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Halftone overlay */
+    .halftone-bg {
+      background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    /* Comic box styles */
+    .comic-card {
+      background: var(--card-bg);
+      border: 4px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 6px 6px 0px 0px var(--blue);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .comic-card:hover {
+      box-shadow: 8px 8px 0px 0px var(--red);
+    }
+    .comic-btn {
+      font-family: 'Bangers', cursive;
+      letter-spacing: 0.05em;
+      border: 3px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 1.25rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      text-transform: uppercase;
+      font-size: 1.15rem;
+      outline: none;
+    }
+    .comic-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 0px 0px 0px 0px !important;
+    }
+    .btn-red {
+      background: var(--red);
+      color: #000;
+      box-shadow: 4px 4px 0px 0px var(--yellow);
+    }
+    .btn-red:hover { background: #ff4d72; }
+    .btn-blue {
+      background: var(--blue);
+      color: #fff;
+      box-shadow: 4px 4px 0px 0px var(--red);
+    }
+    .btn-blue:hover { background: #448eff; }
+    .btn-yellow {
+      background: var(--yellow);
+      color: #000;
+      box-shadow: 4px 4px 0px 0px var(--blue);
+    }
+    .btn-yellow:hover { background: #ffe42e; }
+    .btn-dark {
+      background: #0d0e26;
+      color: #fff;
+      border-color: rgba(255,255,255,0.3);
+      box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.5);
+    }
+    .btn-dark:hover { border-color: var(--yellow); color: var(--yellow); }
+    .btn-sm {
+      padding: 0.25rem 0.65rem;
+      font-size: 0.95rem;
+    }
+
+    /* Comic inputs */
+    .comic-input, .comic-select, .comic-textarea {
+      width: 100%;
+      background: #0d0f28;
+      border: 3px solid #000;
+      color: #fff;
+      padding: 0.65rem 0.9rem;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .comic-input:focus, .comic-select:focus, .comic-textarea:focus {
+      border-color: var(--yellow);
+      box-shadow: 0 0 0 3px rgba(255, 222, 0, 0.25);
+    }
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.35rem;
+      display: block;
+    }
+
+    /* Modal Backdrop */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .modal-box {
+      background: var(--card-bg);
+      border: 4px solid #000;
+      box-shadow: 12px 12px 0px 0px var(--red);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      position: relative;
+    }
+
+    /* Glitch effect */
+    .glitch-text {
+      text-shadow: 2px 2px 0px var(--red), -2px -2px 0px var(--blue);
+    }
+
+    /* Toast Notification */
+    #toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      pointer-events: none;
+    }
+    .toast {
+      pointer-events: auto;
+      background: #0d0f28;
+      border: 3px solid #000;
+      padding: 0.85rem 1.25rem;
+      border-radius: 10px;
+      box-shadow: 6px 6px 0px 0px var(--yellow);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 300px;
+      max-width: 450px;
+      animation: slideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast-success { border-color: #36ff2b; box-shadow: 5px 5px 0px 0px #36ff2b; }
+    .toast-error { border-color: var(--red); box-shadow: 5px 5px 0px 0px var(--red); }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body class="halftone-bg">
+
+  <!-- ================= AUTH VIEW ================= -->
+  <div id="auth-view" style="display: none; min-height: 100vh;" class="flex items-center justify-center p-6">
+    <div style="max-width: 460px; width: 100%; margin: 8vh auto;" class="comic-card p-8">
+      <!-- Comic Brand Tag -->
+      <div style="background: var(--yellow); color: #000; border: 3px solid #000; padding: 0.25rem 0.75rem; display: inline-block; transform: rotate(-2deg); margin-bottom: 1rem; border-radius: 6px;" class="font-comic text-lg">
+        Local Computer Only (127.0.0.1)
+      </div>
+
+      <h1 class="font-comic text-4xl mb-2 text-white glitch-text tracking-wide" id="auth-title">
+        Admin Portal
+      </h1>
+      <p class="text-sm text-gray-300 mb-6 font-marker" id="auth-subtitle">
+        Enter your local secret key to access portfolio command
+      </p>
+
+      <!-- Lockout Alert -->
+      <div id="lockout-banner" style="display: none; background: rgba(255, 55, 95, 0.15); border: 2px solid var(--red); border-radius: 8px; padding: 0.75rem; margin-bottom: 1.25rem;">
+        <p class="text-xs font-mono text-red-400 font-bold" id="lockout-text">
+          ⚠️ Security Lock active.
+        </p>
+      </div>
+
+      <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+        <div style="margin-bottom: 1.25rem;">
+          <label for="admin-password">Admin Password</label>
+          <div style="position: relative;">
+            <input type="password" id="admin-password" class="comic-input" placeholder="••••••••••••" required autocomplete="current-password">
+            <button type="button" onclick="togglePasswordVisibility('admin-password')" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #cbd5e1; cursor: pointer; font-size: 0.9rem;">
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <div id="confirm-password-group" style="display: none; margin-bottom: 1.25rem;">
+          <label for="admin-confirm-password">Confirm Password</label>
+          <input type="password" id="admin-confirm-password" class="comic-input" placeholder="••••••••••••" autocomplete="new-password">
+        </div>
+
+        <p id="auth-error" class="text-xs font-mono text-red-400 mb-4" style="display: none;"></p>
+
+        <button type="submit" class="comic-btn btn-red w-full" id="auth-submit-btn" style="width: 100%;">
+          ⚡ Unlock Dashboard
+        </button>
+      </form>
+
+      <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed rgba(255,255,255,0.15); font-size: 0.75rem; color: #94a3b8;" class="font-mono">
+        <p>🔒 Security: PBKDF2 (600,000 rounds) + Constant-Time verification.</p>
+        <p>Strictly bound to 127.0.0.1. No passwords sent over internet.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN ADMIN DASHBOARD ================= -->
+  <div id="dashboard-view" style="display: none; min-height: 100vh; flex-direction: column;">
+    <!-- Top Header -->
+    <header style="background: rgba(10, 11, 30, 0.95); backdrop-filter: blur(8px); border-bottom: 4px solid #000; position: sticky; top: 0; z-index: 100; padding: 0.85rem 1.5rem;">
+      <div style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+        <!-- Brand -->
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div style="background: white; border: 3px solid #000; padding: 0.25rem 0.85rem; border-radius: 12px; box-shadow: 3px 3px 0px 0px var(--red);">
+            <span class="font-comic text-2xl text-black tracking-widest uppercase">Akash.Admin()</span>
+          </div>
+          <span style="font-size: 0.75rem; background: rgba(42, 127, 255, 0.2); border: 1px solid var(--blue); color: var(--blue); padding: 0.25rem 0.5rem; border-radius: 4px;" class="font-mono hidden sm:inline">
+            Local 127.0.0.1
+          </span>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="comic-btn btn-sm" id="tab-skills" onclick="switchTab('skills')">
+            ⚡ Skills
+          </button>
+          <button class="comic-btn btn-sm" id="tab-projects" onclick="switchTab('projects')">
+            🕷️ Projects
+          </button>
+          <button class="comic-btn btn-sm" id="tab-experience" onclick="switchTab('experience')">
+            🌐 Experience
+          </button>
+          <button class="comic-btn btn-sm" id="tab-publish" onclick="switchTab('publish')">
+            🚀 Publish
+          </button>
+        </nav>
+
+        <!-- Right Quick Actions -->
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <!-- Unsaved Draft Indicator -->
+          <span id="unsaved-badge" style="display: none; background: rgba(255, 222, 0, 0.15); border: 2px solid var(--yellow); color: var(--yellow); padding: 0.35rem 0.65rem; border-radius: 6px; font-size: 0.75rem;" class="font-mono font-bold">
+            ⚠️ Unsaved Draft
+          </span>
+
+          <button onclick="saveAllChangesToDisk()" class="comic-btn btn-yellow btn-sm" title="Save in-memory changes to data files on disk">
+            💾 Save to Disk
+          </button>
+          <button onclick="discardDraftChanges()" class="comic-btn btn-dark btn-sm" title="Discard unsaved changes">
+            ↺ Discard
+          </button>
+          <a href="http://127.0.0.1:3000" target="_blank" rel="noopener noreferrer" class="comic-btn btn-blue btn-sm" title="Open Public Portfolio in new tab">
+            👁️ Preview Site
+          </a>
+          <button onclick="handleLogout()" class="comic-btn btn-red btn-sm" title="Lock admin session">
+            🚪 Logout
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main style="max-width: 1400px; width: 100%; margin: 0 auto; padding: 2rem 1.5rem; flex: 1;">
+
+      <!-- ================= TAB: SKILLS ================= -->
+      <section id="section-skills" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2 class="font-comic text-4xl text-white tracking-wide">Technical Arsenal (Skills)</h2>
+            <p class="font-marker text-sm text-blue-400">Manage categories, skills, colors, and order</p>
+          </div>
+          <button onclick="openCategoryModal()" class="comic-btn btn-red">
+            + Add New Category
+          </button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem;" id="skills-categories-grid">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Live Preview Accordion -->
+        <div style="margin-top: 3rem; background: #0c0e29; border: 3px solid #000; border-radius: 12px; padding: 1.5rem;">
+          <h3 class="font-comic text-2xl text-yellow-400 mb-3">Live Component Preview: Technical Arsenal</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;" id="skills-preview-grid">
+            <!-- Dynamic Preview -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB: PROJECTS ================= -->
+      <section id="section-projects" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2 class="font-comic text-4xl text-white tracking-wide">Spider-Verse Projects</h2>
+            <p class="font-marker text-sm text-yellow-400">Manage featured systems, web apps, repositories, and links</p>
+          </div>
+          <button onclick="openProjectModal()" class="comic-btn btn-yellow">
+            + Add New Project
+          </button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.5rem;" id="projects-grid">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Live Preview Container -->
+        <div style="margin-top: 3rem; background: #0c0e29; border: 3px solid #000; border-radius: 12px; padding: 1.5rem;">
+          <h3 class="font-comic text-2xl text-blue-400 mb-3">Live Component Preview: Projects Grid</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;" id="projects-preview-grid">
+            <!-- Dynamic Preview -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB: EXPERIENCE ================= -->
+      <section id="section-experience" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2 class="font-comic text-4xl text-white tracking-wide">Multiverse Experience Timeline</h2>
+            <p class="font-marker text-sm text-pink-400">Manage positions, companies, dates, and bullet points</p>
+          </div>
+          <button onclick="openExperienceModal()" class="comic-btn btn-blue">
+            + Add Experience Entry
+          </button>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;" id="experience-list">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Live Preview Container -->
+        <div style="margin-top: 3rem; background: #0c0e29; border: 3px solid #000; border-radius: 12px; padding: 1.5rem;">
+          <h3 class="font-comic text-2xl text-pink-400 mb-3">Live Component Preview: Timeline Cards</h3>
+          <div style="display: flex; flex-direction: column; gap: 1.25rem;" id="experience-preview-list">
+            <!-- Dynamic Preview -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB: PUBLISH ================= -->
+      <section id="section-publish" style="display: none;">
+        <div style="margin-bottom: 2rem;">
+          <h2 class="font-comic text-4xl text-white tracking-wide">Publish Changes to GitHub</h2>
+          <p class="font-marker text-sm text-yellow-400">Safely review diffs, commit approved files, and deploy to your live website</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;" class="publish-columns">
+          
+          <!-- Column 1: Git & Workflow Status -->
+          <div class="comic-card p-6">
+            <h3 class="font-comic text-2xl text-cyan-400 mb-4">1. Local Git & Repository Status</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.9rem;" class="font-mono">
+              <div style="display: flex; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px dashed rgba(255,255,255,0.1);">
+                <span class="text-gray-400">Git Repository:</span>
+                <span id="git-is-repo" class="font-bold text-green-400">Checking...</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px dashed rgba(255,255,255,0.1);">
+                <span class="text-gray-400">Current Branch:</span>
+                <span id="git-branch" class="font-bold text-yellow-400">-</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px dashed rgba(255,255,255,0.1);">
+                <span class="text-gray-400">Remote Origin:</span>
+                <span id="git-remote" class="text-gray-300 truncate" style="max-width: 250px;">-</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px dashed rgba(255,255,255,0.1);">
+                <span class="text-gray-400">Latest Commit:</span>
+                <span id="git-last-commit" class="text-gray-300">-</span>
+              </div>
+            </div>
+
+            <!-- Approved Files Status -->
+            <div style="margin-top: 1.5rem; background: #0c0e29; border: 2px solid #000; border-radius: 8px; padding: 1rem;">
+              <h4 class="font-comic text-lg text-yellow-400 mb-2">Approved Content Files:</h4>
+              <ul style="font-size: 0.85rem; list-style: none;" class="font-mono space-y-1">
+                <li id="file-status-skills" class="flex items-center justify-between">
+                  <span>📄 data/skills.json</span>
+                  <span class="text-gray-400">Clean</span>
+                </li>
+                <li id="file-status-projects" class="flex items-center justify-between">
+                  <span>📄 data/projects.json</span>
+                  <span class="text-gray-400">Clean</span>
+                </li>
+                <li id="file-status-experience" class="flex items-center justify-between">
+                  <span>📄 data/experience.json</span>
+                  <span class="text-gray-400">Clean</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Unrelated Files Warning (if any) -->
+            <div id="unrelated-warning" style="display: none; margin-top: 1rem; background: rgba(255, 55, 95, 0.15); border: 2px solid var(--red); border-radius: 8px; padding: 0.75rem;">
+              <p class="text-xs font-mono text-red-300 font-bold mb-1">⚠️ Unrelated Modified Files Detected:</p>
+              <p class="text-xs text-gray-300" id="unrelated-files-list"></p>
+              <p class="text-xs text-yellow-300 mt-1 font-mono">The admin tool will ONLY stage and commit data/*.json files.</p>
+            </div>
+          </div>
+
+          <!-- Column 2: Commit & Publish Action -->
+          <div class="comic-card p-6 flex flex-col justify-between">
+            <div>
+              <h3 class="font-comic text-2xl text-yellow-400 mb-4">2. Commit & Push to Remote</h3>
+
+              <div style="margin-bottom: 1.25rem;">
+                <label for="commit-message">Commit Message</label>
+                <input type="text" id="commit-message" class="comic-input font-mono" value="Update portfolio content via Admin Dashboard">
+              </div>
+
+              <!-- Unsaved Draft Warning in Publish -->
+              <div id="publish-unsaved-alert" style="display: none; background: rgba(255, 222, 0, 0.15); border: 2px solid var(--yellow); border-radius: 8px; padding: 0.75rem; margin-bottom: 1rem;">
+                <p class="text-xs font-mono text-yellow-300 font-bold">
+                  ⚠️ You have in-memory changes not yet saved to disk!
+                </p>
+                <button onclick="saveAllChangesToDisk()" class="comic-btn btn-yellow btn-sm mt-2">
+                  Save Changes to Disk Now
+                </button>
+              </div>
+
+              <div style="background: rgba(42, 127, 255, 0.1); border: 2px solid var(--blue); border-radius: 8px; padding: 0.75rem; font-size: 0.8rem; margin-bottom: 1.5rem;" class="font-mono text-blue-200">
+                <p>• Uses your local Git credentials (SSH / Credential Manager).</p>
+                <p>• Never force-pushes; stages ONLY approved data files.</p>
+                <p>• Automated GitHub Actions will trigger on push to deploy.</p>
+              </div>
+            </div>
+
+            <button onclick="confirmAndPublish()" id="publish-btn" class="comic-btn btn-red w-full text-xl py-3" style="width: 100%;">
+              🚀 Publish to GitHub
+            </button>
+          </div>
+        </div>
+
+        <!-- Diff Viewer -->
+        <div class="comic-card p-6">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 class="font-comic text-2xl text-white">Pending Changes Diff</h3>
+            <button onclick="refreshGitStatusAndDiff()" class="comic-btn btn-dark btn-sm">
+              ↻ Refresh Diff
+            </button>
+          </div>
+          <pre id="git-diff-output" style="background: #080918; border: 2px solid #000; border-radius: 8px; padding: 1rem; color: #a5b4fc; font-size: 0.82rem; overflow-x: auto; max-height: 350px;" class="font-mono">Loading diff...</pre>
+        </div>
+
+        <!-- Post-Publish Success Card -->
+        <div id="publish-success-card" class="comic-card p-6 mt-6" style="display: none; border-color: #36ff2b; box-shadow: 8px 8px 0px 0px #36ff2b;">
+          <h3 class="font-comic text-3xl text-green-400 mb-2">🎉 Publish Succeeded!</h3>
+          <p class="text-sm text-gray-200 mb-4" id="publish-success-summary"></p>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a id="publish-actions-link" href="#" target="_blank" rel="noopener noreferrer" class="comic-btn btn-yellow btn-sm" style="display: none;">
+              ⚡ View GitHub Actions Deployment
+            </a>
+            <a href="http://127.0.0.1:3000" target="_blank" rel="noopener noreferrer" class="comic-btn btn-blue btn-sm">
+              🌐 Check Local Preview
+            </a>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- 1. Category Modal (Add / Edit) -->
+  <div id="category-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-box">
+      <h3 class="font-comic text-3xl text-yellow-400 mb-4" id="category-modal-title">Edit Skill Category</h3>
+      <form onsubmit="handleCategorySave(event)">
+        <input type="hidden" id="category-edit-index" value="-1">
+        <div style="margin-bottom: 1rem;">
+          <label for="category-title-input">Category Title</label>
+          <input type="text" id="category-title-input" class="comic-input" placeholder="e.g. Backend, AI, Cloud Tools" required>
+        </div>
+        <div style="margin-bottom: 1.5rem;">
+          <label>Category Accent Color</label>
+          <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
+            <button type="button" onclick="selectCategoryColor('#FF375F')" style="background: #FF375F; width: 32px; height: 32px; border: 2px solid #000; border-radius: 6px; cursor: pointer;"></button>
+            <button type="button" onclick="selectCategoryColor('#2A7FFF')" style="background: #2A7FFF; width: 32px; height: 32px; border: 2px solid #000; border-radius: 6px; cursor: pointer;"></button>
+            <button type="button" onclick="selectCategoryColor('#00FFFF')" style="background: #00FFFF; width: 32px; height: 32px; border: 2px solid #000; border-radius: 6px; cursor: pointer;"></button>
+            <button type="button" onclick="selectCategoryColor('#FFDE00')" style="background: #FFDE00; width: 32px; height: 32px; border: 2px solid #000; border-radius: 6px; cursor: pointer;"></button>
+            <button type="button" onclick="selectCategoryColor('#36ff2b')" style="background: #36ff2b; width: 32px; height: 32px; border: 2px solid #000; border-radius: 6px; cursor: pointer;"></button>
+            <button type="button" onclick="selectCategoryColor('#F5F5F5')" style="background: #F5F5F5; width: 32px; height: 32px; border: 2px solid #000; border-radius: 6px; cursor: pointer;"></button>
+            <input type="text" id="category-color-input" class="comic-input font-mono" style="width: 120px;" placeholder="#FF375F" required>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" onclick="closeModal('category-modal')" class="comic-btn btn-dark">Cancel</button>
+          <button type="submit" class="comic-btn btn-red">Save Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Project Modal (Add / Edit) -->
+  <div id="project-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-box">
+      <h3 class="font-comic text-3xl text-yellow-400 mb-4" id="project-modal-title">Edit Project</h3>
+      <form onsubmit="handleProjectSave(event)">
+        <input type="hidden" id="project-edit-id" value="">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label for="project-title-input">Project Title *</label>
+            <input type="text" id="project-title-input" class="comic-input" placeholder="e.g. Fitmeal, CV Lab" required>
+          </div>
+          <div>
+            <label for="project-id-input">Unique ID / Slug</label>
+            <input type="text" id="project-id-input" class="comic-input font-mono" placeholder="e.g. fitmeal-ai" required>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label for="project-desc-input">Description *</label>
+          <textarea id="project-desc-input" class="comic-textarea" rows="3" placeholder="Overview of the system, architecture, and purpose" required></textarea>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label for="project-tags-input">Technology Tags (Comma Separated)</label>
+          <input type="text" id="project-tags-input" class="comic-input" placeholder="Spring Boot, React, MongoDB, Gemini API">
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label for="project-image-input">Image / Cover</label>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <select id="project-image-preset" class="comic-select" onchange="onPresetImageSelected(this.value)" style="width: 160px;">
+              <option value="">Preset Image...</option>
+              <option value="fitmeal">fitmeal</option>
+              <option value="blog">blog</option>
+              <option value="cvlab">cvlab</option>
+            </select>
+            <input type="text" id="project-image-input" class="comic-input" placeholder="fitmeal, or URL https://..." required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label for="project-link-input">Primary / Live Demo URL</label>
+            <input type="url" id="project-link-input" class="comic-input font-mono" placeholder="https://...">
+          </div>
+          <div>
+            <label for="project-github-input">GitHub Repository URL</label>
+            <input type="url" id="project-github-input" class="comic-input font-mono" placeholder="https://github.com/...">
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <input type="checkbox" id="project-featured-input" style="width: 18px; height: 18px; cursor: pointer;">
+          <label for="project-featured-input" style="margin-bottom: 0; cursor: pointer;">Featured in Spider-Verse showcase</label>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" onclick="closeModal('project-modal')" class="comic-btn btn-dark">Cancel</button>
+          <button type="submit" class="comic-btn btn-yellow">Save Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Experience Modal (Add / Edit) -->
+  <div id="experience-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-box">
+      <h3 class="font-comic text-3xl text-yellow-400 mb-4" id="experience-modal-title">Edit Experience Entry</h3>
+      <form onsubmit="handleExperienceSave(event)">
+        <input type="hidden" id="experience-edit-id" value="">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label for="exp-role-input">Role Title *</label>
+            <input type="text" id="exp-role-input" class="comic-input" placeholder="e.g. Assistant System Engineer" required>
+          </div>
+          <div>
+            <label for="exp-company-input">Company *</label>
+            <input type="text" id="exp-company-input" class="comic-input" placeholder="e.g. TCS" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label for="exp-timeline-input">Timeline Display String *</label>
+            <input type="text" id="exp-timeline-input" class="comic-input font-mono" placeholder="e.g. Feb 2026 – Present" required>
+          </div>
+          <div>
+            <label for="exp-type-input">Employment Type</label>
+            <select id="exp-type-input" class="comic-select">
+              <option value="Full-time">Full-time</option>
+              <option value="Internship">Internship</option>
+              <option value="Contract">Contract</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Trainee">Trainee</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label for="exp-location-input">Location</label>
+          <input type="text" id="exp-location-input" class="comic-input" placeholder="e.g. India, Remote">
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label for="exp-desc-input">Summary / Description (Optional)</label>
+          <textarea id="exp-desc-input" class="comic-textarea" rows="2" placeholder="Brief summary of responsibilities and technical domain"></textarea>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <label>Bullet Points / Achievements</label>
+          <div id="bullet-points-list" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.5rem;"></div>
+          <button type="button" onclick="addBulletPointInput('')" class="comic-btn btn-sm btn-dark">
+            + Add Bullet Point
+          </button>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" onclick="closeModal('experience-modal')" class="comic-btn btn-dark">Cancel</button>
+          <button type="submit" class="comic-btn btn-blue">Save Experience</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Confirm Delete Modal -->
+  <div id="delete-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-box" style="max-width: 420px; text-align: center;">
+      <h3 class="font-comic text-3xl text-red-500 mb-2">Delete Confirmation</h3>
+      <p id="delete-modal-msg" class="text-sm text-gray-300 mb-6">Are you sure you want to delete this item?</p>
+      <div style="display: flex; justify-content: center; gap: 1rem;">
+        <button onclick="closeModal('delete-modal')" class="comic-btn btn-dark">Cancel</button>
+        <button id="delete-confirm-btn" onclick="executeDelete()" class="comic-btn btn-red">Confirm Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    // State
+    let authToken = localStorage.getItem('spider_admin_token') || '';
+    let currentTab = 'skills';
+    let savedContent = null;
+    let draftContent = null;
+    let isDraftDirty = false;
+    let pendingDeleteAction = null;
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', async () => {
+      await checkAuthStatus();
+    });
+
+    // -------------------------------------------------------------
+    // AUTHENTICATION LOGIC
+    // -------------------------------------------------------------
+    async function checkAuthStatus() {
+      try {
+        const res = await fetch('/api/auth/status', {
+          headers: authToken ? { 'Authorization': `Bearer ${authToken}` } : {}
+        });
+        const data = await res.json();
+
+        if (data.isLocked) {
+          showLockout(data.remainingLockSec);
+          showAuthView(data.initialized);
+          return;
+        }
+
+        if (!data.authenticated) {
+          showAuthView(data.initialized);
+        } else {
+          showDashboardView();
+        }
+      } catch (err) {
+        showToast('Cannot connect to local admin server', 'error');
+      }
+    }
+
+    function showAuthView(initialized) {
+      document.getElementById('auth-view').style.display = 'flex';
+      document.getElementById('dashboard-view').style.display = 'none';
+
+      const title = document.getElementById('auth-title');
+      const subtitle = document.getElementById('auth-subtitle');
+      const confirmGroup = document.getElementById('confirm-password-group');
+      const submitBtn = document.getElementById('auth-submit-btn');
+
+      if (!initialized) {
+        title.innerText = 'Create Admin Key';
+        subtitle.innerText = 'Set up a local password to protect your portfolio command center.';
+        confirmGroup.style.display = 'block';
+        submitBtn.innerText = '✨ Initialize Security';
+      } else {
+        title.innerText = 'Admin Portal';
+        subtitle.innerText = 'Enter your local secret key to access portfolio command';
+        confirmGroup.style.display = 'none';
+        submitBtn.innerText = '⚡ Unlock Dashboard';
+      }
+    }
+
+    function showLockout(seconds) {
+      const banner = document.getElementById('lockout-banner');
+      const text = document.getElementById('lockout-text');
+      banner.style.display = 'block';
+      text.innerText = `⚠️ Rate limit locked. Try again in ${seconds}s`;
+      let remaining = seconds;
+      const interval = setInterval(() => {
+        remaining--;
+        if (remaining <= 0) {
+          clearInterval(interval);
+          banner.style.display = 'none';
+        } else {
+          text.innerText = `⚠️ Rate limit locked. Try again in ${remaining}s`;
+        }
+      }, 1000);
+    }
+
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      const errEl = document.getElementById('auth-error');
+      errEl.style.display = 'none';
+
+      const password = document.getElementById('admin-password').value;
+      const confirmGroup = document.getElementById('confirm-password-group');
+
+      if (confirmGroup.style.display !== 'none') {
+        // Setup flow
+        const confirmPass = document.getElementById('admin-confirm-password').value;
+        if (password.length < 8) {
+          errEl.innerText = 'Password must be at least 8 characters long.';
+          errEl.style.display = 'block';
+          return;
+        }
+        if (password !== confirmPass) {
+          errEl.innerText = 'Passwords do not match.';
+          errEl.style.display = 'block';
+          return;
+        }
+
+        try {
+          const res = await fetch('/api/auth/setup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error);
+
+          authToken = data.token;
+          localStorage.setItem('spider_admin_token', authToken);
+          showToast('Admin password set successfully!', 'success');
+          showDashboardView();
+        } catch (err) {
+          errEl.innerText = err.message;
+          errEl.style.display = 'block';
+        }
+      } else {
+        // Login flow
+        try {
+          const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password })
+          });
+          const data = await res.json();
+          if (res.status === 429) {
+            showLockout(data.remainingSeconds);
+            return;
+          }
+          if (!res.ok) {
+            throw new Error(data.error + (data.attemptsLeft ? ` (${data.attemptsLeft} attempts left)` : ''));
+          }
+
+          authToken = data.token;
+          localStorage.setItem('spider_admin_token', authToken);
+          showToast('Access granted. Welcome back!', 'success');
+          showDashboardView();
+        } catch (err) {
+          errEl.innerText = err.message;
+          errEl.style.display = 'block';
+        }
+      }
+    }
+
+    async function handleLogout() {
+      try {
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+      } catch (e) {}
+      authToken = '';
+      localStorage.removeItem('spider_admin_token');
+      showToast('Logged out securely.', 'info');
+      await checkAuthStatus();
+    }
+
+    function togglePasswordVisibility(inputId) {
+      const input = document.getElementById(inputId);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    // -------------------------------------------------------------
+    // DASHBOARD & TABS
+    // -------------------------------------------------------------
+    async function showDashboardView() {
+      document.getElementById('auth-view').style.display = 'none';
+      document.getElementById('dashboard-view').style.display = 'flex';
+      await loadContentFromDisk();
+      switchTab(currentTab);
+    }
+
+    function switchTab(tabName) {
+      currentTab = tabName;
+      ['skills', 'projects', 'experience', 'publish'].forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        const sec = document.getElementById(`section-${t}`);
+        if (t === tabName) {
+          sec.style.display = 'block';
+          btn.classList.remove('btn-dark');
+          btn.classList.add(t === 'skills' ? 'btn-red' : t === 'projects' ? 'btn-yellow' : t === 'experience' ? 'btn-blue' : 'btn-red');
+        } else {
+          sec.style.display = 'none';
+          btn.classList.remove('btn-red', 'btn-yellow', 'btn-blue');
+          btn.classList.add('btn-dark');
+        }
+      });
+
+      if (tabName === 'publish') {
+        refreshGitStatusAndDiff();
+      }
+    }
+
+    // -------------------------------------------------------------
+    // CONTENT MANAGEMENT (LOAD, DRAFT, SAVE)
+    // -------------------------------------------------------------
+    async function loadContentFromDisk() {
+      try {
+        const res = await fetch('/api/content', {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        if (res.status === 401) return handleLogout();
+        const data = await res.json();
+
+        savedContent = JSON.parse(JSON.stringify(data));
+        draftContent = JSON.parse(JSON.stringify(data));
+        setDraftDirty(false);
+
+        renderSkills();
+        renderProjects();
+        renderExperience();
+      } catch (err) {
+        showToast('Error loading content: ' + err.message, 'error');
+      }
+    }
+
+    function setDraftDirty(dirty) {
+      isDraftDirty = dirty;
+      const badge = document.getElementById('unsaved-badge');
+      const publishAlert = document.getElementById('publish-unsaved-alert');
+      if (dirty) {
+        badge.style.display = 'inline-block';
+        if (publishAlert) publishAlert.style.display = 'block';
+      } else {
+        badge.style.display = 'none';
+        if (publishAlert) publishAlert.style.display = 'none';
+      }
+    }
+
+    function markDraftChanged() {
+      setDraftDirty(true);
+      renderSkills();
+      renderProjects();
+      renderExperience();
+    }
+
+    async function saveAllChangesToDisk() {
+      try {
+        const res = await fetch('/api/content/save', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify(draftContent)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        savedContent = JSON.parse(JSON.stringify(draftContent));
+        setDraftDirty(false);
+        showToast(`Saved to portfolio files! (Backup: ${data.backupCreated})`, 'success');
+        if (currentTab === 'publish') refreshGitStatusAndDiff();
+      } catch (err) {
+        showToast('Save failed: ' + err.message, 'error');
+      }
+    }
+
+    function discardDraftChanges() {
+      if (!isDraftDirty) {
+        showToast('No unsaved changes to discard.', 'info');
+        return;
+      }
+      if (confirm('Discard all unsaved draft changes and reload from disk files?')) {
+        draftContent = JSON.parse(JSON.stringify(savedContent));
+        setDraftDirty(false);
+        renderSkills();
+        renderProjects();
+        renderExperience();
+        showToast('Draft reverted to disk state.', 'info');
+        if (currentTab === 'publish') refreshGitStatusAndDiff();
+      }
+    }
+
+    // -------------------------------------------------------------
+    // SKILLS SECTION LOGIC
+    // -------------------------------------------------------------
+    function renderSkills() {
+      const container = document.getElementById('skills-categories-grid');
+      const preview = document.getElementById('skills-preview-grid');
+      if (!container || !draftContent) return;
+
+      container.innerHTML = '';
+      preview.innerHTML = '';
+
+      draftContent.skills.forEach((cat, idx) => {
+        // Management Card
+        const card = document.createElement('div');
+        card.className = 'comic-card p-5';
+        card.style.borderTop = `6px solid ${cat.color}`;
+
+        const skillBadges = cat.skills.map((s, sIdx) => `
+          <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.2); padding: 0.25rem 0.5rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.85rem;">
+            <span>${escapeHtml(s)}</span>
+            <div style="display: flex; gap: 2px;">
+              ${sIdx > 0 ? `<button onclick="moveSkill(${idx}, ${sIdx}, -1)" title="Move left" style="background:none; border:none; color:#cbd5e1; cursor:pointer; font-size:0.75rem;">◀</button>` : ''}
+              ${sIdx < cat.skills.length - 1 ? `<button onclick="moveSkill(${idx}, ${sIdx}, 1)" title="Move right" style="background:none; border:none; color:#cbd5e1; cursor:pointer; font-size:0.75rem;">▶</button>` : ''}
+              <button onclick="removeSkill(${idx}, ${sIdx})" title="Remove skill" style="background:none; border:none; color:var(--red); cursor:pointer; font-weight:bold; margin-left:3px;">✕</button>
+            </div>
+          </div>
+        `).join('');
+
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="display:inline-block; width:12px; height:12px; background:${cat.color}; border-radius:2px;"></span>
+              <h3 class="font-comic text-2xl text-white tracking-wide">${escapeHtml(cat.title)}</h3>
+              <span class="text-xs text-gray-400 font-mono">(${cat.skills.length})</span>
+            </div>
+            <div style="display: flex; gap: 0.25rem;">
+              ${idx > 0 ? `<button onclick="moveCategory(${idx}, -1)" class="comic-btn btn-dark btn-sm" title="Move Up">▲</button>` : ''}
+              ${idx < draftContent.skills.length - 1 ? `<button onclick="moveCategory(${idx}, 1)" class="comic-btn btn-dark btn-sm" title="Move Down">▼</button>` : ''}
+              <button onclick="openCategoryModal(${idx})" class="comic-btn btn-dark btn-sm" title="Edit Category">✎</button>
+              <button onclick="confirmDeleteCategory(${idx})" class="comic-btn btn-red btn-sm" title="Delete Category">🗑️</button>
+            </div>
+          </div>
+
+          <!-- Skills Tag Cloud -->
+          <div style="display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1rem; min-height: 48px;">
+            ${skillBadges || '<span class="text-xs text-gray-500 italic">No skills yet</span>'}
+          </div>
+
+          <!-- Add Skill Form -->
+          <form onsubmit="handleAddSkill(event, ${idx})" style="display: flex; gap: 0.5rem;">
+            <input type="text" placeholder="Add skill (e.g. Docker, LangChain)" class="comic-input" style="padding: 0.4rem 0.65rem; font-size: 0.85rem;" required>
+            <button type="submit" class="comic-btn btn-sm btn-yellow">+ Add</button>
+          </form>
+        `;
+        container.appendChild(card);
+
+        // Preview Card (matches SkillsWeb.tsx style)
+        const pCard = document.createElement('div');
+        pCard.style.background = '#151735';
+        pCard.style.border = '4px solid #000';
+        pCard.style.padding = '1.25rem';
+        pCard.style.borderRadius = '10px';
+        pCard.innerHTML = `
+          <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.75rem;">
+            <div style="width:10px; height:22px; background:${cat.color}; transform:skewX(-12deg);"></div>
+            <h4 class="font-comic text-2xl text-white">${escapeHtml(cat.title)}</h4>
+          </div>
+          <div style="width:100%; height:2px; background:rgba(255,222,0,0.3); margin-bottom:0.75rem;"></div>
+          <ul style="list-style:none; space-y:0.35rem; font-size:0.85rem; color:#cbd5e1;">
+            ${cat.skills.map(s => `<li><span style="color:#FF375F; font-weight:bold; margin-right:4px;">›</span> ${escapeHtml(s)}</li>`).join('')}
+          </ul>
+        `;
+        preview.appendChild(pCard);
+      });
+    }
+
+    function moveCategory(index, direction) {
+      const target = index + direction;
+      if (target < 0 || target >= draftContent.skills.length) return;
+      const temp = draftContent.skills[index];
+      draftContent.skills[index] = draftContent.skills[target];
+      draftContent.skills[target] = temp;
+      markDraftChanged();
+    }
+
+    function moveSkill(catIdx, skillIdx, direction) {
+      const cat = draftContent.skills[catIdx];
+      const target = skillIdx + direction;
+      if (target < 0 || target >= cat.skills.length) return;
+      const temp = cat.skills[skillIdx];
+      cat.skills[skillIdx] = cat.skills[target];
+      cat.skills[target] = temp;
+      markDraftChanged();
+    }
+
+    function handleAddSkill(e, catIdx) {
+      e.preventDefault();
+      const input = e.target.querySelector('input');
+      const val = input.value.trim();
+      if (!val) return;
+
+      const cat = draftContent.skills[catIdx];
+      if (cat.skills.some(s => s.toLowerCase() === val.toLowerCase())) {
+        showToast(`"${val}" already exists in ${cat.title}`, 'error');
+        return;
+      }
+      cat.skills.push(val);
+      input.value = '';
+      markDraftChanged();
+    }
+
+    function removeSkill(catIdx, skillIdx) {
+      draftContent.skills[catIdx].skills.splice(skillIdx, 1);
+      markDraftChanged();
+    }
+
+    function openCategoryModal(idx = -1) {
+      const modal = document.getElementById('category-modal');
+      const titleEl = document.getElementById('category-modal-title');
+      const idxInput = document.getElementById('category-edit-index');
+      const titleInput = document.getElementById('category-title-input');
+      const colorInput = document.getElementById('category-color-input');
+
+      if (idx >= 0) {
+        const cat = draftContent.skills[idx];
+        titleEl.innerText = `Edit: ${cat.title}`;
+        idxInput.value = idx;
+        titleInput.value = cat.title;
+        colorInput.value = cat.color;
+      } else {
+        titleEl.innerText = 'Add New Skill Category';
+        idxInput.value = -1;
+        titleInput.value = '';
+        colorInput.value = '#FF375F';
+      }
+      modal.style.display = 'flex';
+      titleInput.focus();
+    }
+
+    function selectCategoryColor(color) {
+      document.getElementById('category-color-input').value = color;
+    }
+
+    function handleCategorySave(e) {
+      e.preventDefault();
+      const idx = parseInt(document.getElementById('category-edit-index').value, 10);
+      const title = document.getElementById('category-title-input').value.trim();
+      const color = document.getElementById('category-color-input').value.trim();
+
+      if (!title) return;
+
+      if (idx >= 0) {
+        draftContent.skills[idx].title = title;
+        draftContent.skills[idx].color = color;
+      } else {
+        draftContent.skills.push({
+          title,
+          color: color || '#FF375F',
+          skills: []
+        });
+      }
+      closeModal('category-modal');
+      markDraftChanged();
+      showToast('Category updated in draft!', 'success');
+    }
+
+    function confirmDeleteCategory(idx) {
+      const cat = draftContent.skills[idx];
+      pendingDeleteAction = () => {
+        draftContent.skills.splice(idx, 1);
+        markDraftChanged();
+        showToast(`Category "${cat.title}" deleted.`, 'info');
+      };
+      document.getElementById('delete-modal-msg').innerText = `Are you sure you want to delete category "${cat.title}" and its ${cat.skills.length} skills?`;
+      document.getElementById('delete-modal').style.display = 'flex';
+    }
+
+    // -------------------------------------------------------------
+    // PROJECTS SECTION LOGIC
+    // -------------------------------------------------------------
+    function renderProjects() {
+      const container = document.getElementById('projects-grid');
+      const preview = document.getElementById('projects-preview-grid');
+      if (!container || !draftContent) return;
+
+      container.innerHTML = '';
+      preview.innerHTML = '';
+
+      draftContent.projects.forEach((proj, idx) => {
+        // Management Card
+        const card = document.createElement('div');
+        card.className = 'comic-card p-5';
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.75rem;">
+            <div>
+              <span class="font-mono text-xs text-yellow-400 font-bold">#${idx + 1} ID: ${escapeHtml(proj.id)}</span>
+              <h3 class="font-comic text-2xl text-white tracking-wide">${escapeHtml(proj.title)}</h3>
+            </div>
+            <div style="display:flex; gap:0.25rem;">
+              ${idx > 0 ? `<button onclick="moveProject(${idx}, -1)" class="comic-btn btn-dark btn-sm" title="Move Up">▲</button>` : ''}
+              ${idx < draftContent.projects.length - 1 ? `<button onclick="moveProject(${idx}, 1)" class="comic-btn btn-dark btn-sm" title="Move Down">▼</button>` : ''}
+              <button onclick="duplicateProject(${idx})" class="comic-btn btn-dark btn-sm" title="Duplicate">📑</button>
+              <button onclick="openProjectModal(${idx})" class="comic-btn btn-dark btn-sm" title="Edit">✎</button>
+              <button onclick="confirmDeleteProject(${idx})" class="comic-btn btn-red btn-sm" title="Delete">🗑️</button>
+            </div>
+          </div>
+
+          <p class="text-xs text-gray-300 mb-3" style="min-height: 38px;">${escapeHtml(proj.description)}</p>
+
+          <div style="display:flex; flex-wrap:wrap; gap:0.35rem; margin-bottom:0.75rem;">
+            ${proj.tags.map(t => `<span style="background:white; color:#000; font-family:'Bangers'; font-size:0.75rem; border:1px solid #000; padding:1px 6px; border-radius:12px;">${escapeHtml(t)}</span>`).join('')}
+          </div>
+
+          <div style="font-size:0.75rem; color:#94a3b8; border-top:1px dashed rgba(255,255,255,0.1); padding-top:0.5rem; display:flex; justify-content:space-between;">
+            <span>Cover: <strong>${escapeHtml(proj.image)}</strong></span>
+            ${proj.link ? `<a href="${proj.link}" target="_blank" class="text-blue-400 underline">Link ↗</a>` : '<span>No Link</span>'}
+          </div>
+        `;
+        container.appendChild(card);
+
+        // Preview Card (matches ProjectsGrid.tsx style)
+        const pCard = document.createElement('div');
+        pCard.style.background = '#1a1c3d';
+        pCard.style.border = '4px solid #000';
+        pCard.style.padding = '1rem';
+        pCard.style.boxShadow = '6px 6px 0px 0px #FF375F';
+        pCard.innerHTML = `
+          <div style="height:120px; background:#000; border:2px solid #000; display:flex; align-items:center; justify-content:center; color:#FFDE00; font-family:'Bangers'; font-size:1.5rem; margin-bottom:0.75rem;">
+            [IMAGE: ${escapeHtml(proj.image)}]
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:0.25rem; margin-bottom:0.5rem;">
+            ${proj.tags.map(t => `<span style="background:white; color:#000; font-family:'Bangers'; font-size:0.75rem; border:1px solid #000; padding:1px 5px; border-radius:10px;">${escapeHtml(t)}</span>`).join('')}
+          </div>
+          <h4 class="font-comic text-2xl text-pink-400 mb-1">${escapeHtml(proj.title)}</h4>
+          <p style="font-size:0.8rem; color:#9ca3af; line-height:1.4;">${escapeHtml(proj.description)}</p>
+        `;
+        preview.appendChild(pCard);
+      });
+    }
+
+    function moveProject(index, direction) {
+      const target = index + direction;
+      if (target < 0 || target >= draftContent.projects.length) return;
+      const temp = draftContent.projects[index];
+      draftContent.projects[index] = draftContent.projects[target];
+      draftContent.projects[target] = temp;
+      markDraftChanged();
+    }
+
+    function duplicateProject(index) {
+      const orig = draftContent.projects[index];
+      const clone = JSON.parse(JSON.stringify(orig));
+      clone.id = `${orig.id}-copy-${Date.now().toString().slice(-4)}`;
+      clone.title = `${orig.title} (Copy)`;
+      draftContent.projects.splice(index + 1, 0, clone);
+      markDraftChanged();
+      showToast(`Project duplicated: ${clone.title}`, 'success');
+    }
+
+    function openProjectModal(idx = -1) {
+      const modal = document.getElementById('project-modal');
+      const titleEl = document.getElementById('project-modal-title');
+      const idInput = document.getElementById('project-id-input');
+      const titleInput = document.getElementById('project-title-input');
+      const descInput = document.getElementById('project-desc-input');
+      const tagsInput = document.getElementById('project-tags-input');
+      const imgInput = document.getElementById('project-image-input');
+      const linkInput = document.getElementById('project-link-input');
+      const gitInput = document.getElementById('project-github-input');
+      const featInput = document.getElementById('project-featured-input');
+
+      if (idx >= 0) {
+        const p = draftContent.projects[idx];
+        titleEl.innerText = `Edit: ${p.title}`;
+        document.getElementById('project-edit-id').value = idx;
+        idInput.value = p.id;
+        titleInput.value = p.title;
+        descInput.value = p.description;
+        tagsInput.value = (p.tags || []).join(', ');
+        imgInput.value = p.image || '';
+        linkInput.value = p.link || p.liveDemoUrl || '';
+        gitInput.value = p.githubUrl || '';
+        featInput.checked = !!p.featured;
+      } else {
+        titleEl.innerText = 'Add New Project';
+        document.getElementById('project-edit-id').value = -1;
+        idInput.value = 'project-' + Date.now().toString().slice(-4);
+        titleInput.value = '';
+        descInput.value = '';
+        tagsInput.value = '';
+        imgInput.value = 'fitmeal';
+        linkInput.value = '';
+        gitInput.value = '';
+        featInput.checked = true;
+      }
+      modal.style.display = 'flex';
+      titleInput.focus();
+    }
+
+    function onPresetImageSelected(val) {
+      if (val) {
+        document.getElementById('project-image-input').value = val;
+      }
+    }
+
+    function handleProjectSave(e) {
+      e.preventDefault();
+      const editIdx = parseInt(document.getElementById('project-edit-id').value, 10);
+      const id = document.getElementById('project-id-input').value.trim();
+      const title = document.getElementById('project-title-input').value.trim();
+      const description = document.getElementById('project-desc-input').value.trim();
+      const tags = document.getElementById('project-tags-input').value.split(',').map(t => t.trim()).filter(Boolean);
+      const image = document.getElementById('project-image-input').value.trim() || 'fitmeal';
+      const link = document.getElementById('project-link-input').value.trim();
+      const githubUrl = document.getElementById('project-github-input').value.trim();
+      const featured = document.getElementById('project-featured-input').checked;
+
+      const projectData = {
+        id,
+        title,
+        description,
+        tags,
+        image,
+        link: link || githubUrl || '',
+        liveDemoUrl: link || '',
+        githubUrl: githubUrl || '',
+        featured
+      };
+
+      if (editIdx >= 0) {
+        draftContent.projects[editIdx] = projectData;
+      } else {
+        draftContent.projects.push(projectData);
+      }
+      closeModal('project-modal');
+      markDraftChanged();
+      showToast('Project saved in draft!', 'success');
+    }
+
+    function confirmDeleteProject(idx) {
+      const p = draftContent.projects[idx];
+      pendingDeleteAction = () => {
+        draftContent.projects.splice(idx, 1);
+        markDraftChanged();
+        showToast(`Project "${p.title}" deleted.`, 'info');
+      };
+      document.getElementById('delete-modal-msg').innerText = `Are you sure you want to delete project "${p.title}"?`;
+      document.getElementById('delete-modal').style.display = 'flex';
+    }
+
+    // -------------------------------------------------------------
+    // EXPERIENCE SECTION LOGIC
+    // -------------------------------------------------------------
+    function renderExperience() {
+      const container = document.getElementById('experience-list');
+      const preview = document.getElementById('experience-preview-list');
+      if (!container || !draftContent) return;
+
+      container.innerHTML = '';
+      preview.innerHTML = '';
+
+      draftContent.experience.forEach((exp, idx) => {
+        // Management Card
+        const card = document.createElement('div');
+        card.className = 'comic-card p-5';
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.5rem;">
+            <div>
+              <div style="display:flex; gap:0.5rem; align-items:center;">
+                <h3 class="font-comic text-2xl text-pink-400 tracking-wide">${escapeHtml(exp.role)}</h3>
+                <span class="font-marker text-lg text-white">@ ${escapeHtml(exp.company)}</span>
+              </div>
+              <p class="font-mono text-xs text-yellow-400 font-bold">${escapeHtml(exp.timeline || 'Present')} ${exp.employmentType ? `• ${exp.employmentType}` : ''}</p>
+            </div>
+            <div style="display:flex; gap:0.25rem;">
+              ${idx > 0 ? `<button onclick="moveExperience(${idx}, -1)" class="comic-btn btn-dark btn-sm" title="Move Up">▲</button>` : ''}
+              ${idx < draftContent.experience.length - 1 ? `<button onclick="moveExperience(${idx}, 1)" class="comic-btn btn-dark btn-sm" title="Move Down">▼</button>` : ''}
+              <button onclick="openExperienceModal(${idx})" class="comic-btn btn-dark btn-sm" title="Edit">✎</button>
+              <button onclick="confirmDeleteExperience(${idx})" class="comic-btn btn-red btn-sm" title="Delete">🗑️</button>
+            </div>
+          </div>
+
+          ${exp.description ? `<p class="text-xs text-gray-300 mt-2">${escapeHtml(exp.description)}</p>` : ''}
+
+          ${(exp.bulletPoints && exp.bulletPoints.length > 0) ? `
+            <ul style="margin-top:0.5rem; padding-left:1rem; font-size:0.8rem; color:#cbd5e1;">
+              ${exp.bulletPoints.map(bp => `<li>${escapeHtml(bp)}</li>`).join('')}
+            </ul>
+          ` : ''}
+        `;
+        container.appendChild(card);
+
+        // Preview Card (matches ExperienceWeb.tsx style)
+        const pCard = document.createElement('div');
+        pCard.style.background = '#151735';
+        pCard.style.border = '4px solid #000';
+        pCard.style.padding = '1.25rem';
+        pCard.style.borderRadius = '12px';
+        pCard.style.boxShadow = '6px 6px 0px 0px #2A7FFF';
+        pCard.innerHTML = `
+          <h4 class="font-comic text-2xl text-pink-400 mb-1">${escapeHtml(exp.role)}</h4>
+          <p class="font-marker text-xl text-white mb-2">${escapeHtml(exp.company)}</p>
+          <div style="display:inline-block; background:rgba(0,0,0,0.5); border:2px solid rgba(255,222,0,0.4); padding:2px 10px; border-radius:6px; margin-bottom:0.5rem;">
+            <span class="font-comic text-yellow-400">${escapeHtml(exp.timeline || 'Present')}</span>
+          </div>
+          ${exp.description ? `<p style="font-size:0.8rem; color:#e2e8f0; margin-bottom:0.5rem;">${escapeHtml(exp.description)}</p>` : ''}
+          ${(exp.bulletPoints && exp.bulletPoints.length > 0) ? `
+            <ul style="font-size:0.8rem; color:#cbd5e1; list-style:none;">
+              ${exp.bulletPoints.map(p => `<li><span style="color:#FF375F; font-weight:bold;">›</span> ${escapeHtml(p)}</li>`).join('')}
+            </ul>
+          ` : ''}
+        `;
+        preview.appendChild(pCard);
+      });
+    }
+
+    function moveExperience(index, direction) {
+      const target = index + direction;
+      if (target < 0 || target >= draftContent.experience.length) return;
+      const temp = draftContent.experience[index];
+      draftContent.experience[index] = draftContent.experience[target];
+      draftContent.experience[target] = temp;
+      markDraftChanged();
+    }
+
+    function openExperienceModal(idx = -1) {
+      const modal = document.getElementById('experience-modal');
+      const titleEl = document.getElementById('experience-modal-title');
+      const roleInput = document.getElementById('exp-role-input');
+      const compInput = document.getElementById('exp-company-input');
+      const timeInput = document.getElementById('exp-timeline-input');
+      const typeInput = document.getElementById('exp-type-input');
+      const locInput = document.getElementById('exp-location-input');
+      const descInput = document.getElementById('exp-desc-input');
+      const bpContainer = document.getElementById('bullet-points-list');
+
+      bpContainer.innerHTML = '';
+
+      if (idx >= 0) {
+        const exp = draftContent.experience[idx];
+        titleEl.innerText = `Edit: ${exp.role}`;
+        document.getElementById('experience-edit-id').value = idx;
+        roleInput.value = exp.role;
+        compInput.value = exp.company;
+        timeInput.value = exp.timeline || '';
+        typeInput.value = exp.employmentType || 'Full-time';
+        locInput.value = exp.location || '';
+        descInput.value = exp.description || '';
+        (exp.bulletPoints || []).forEach(bp => addBulletPointInput(bp));
+      } else {
+        titleEl.innerText = 'Add New Experience Entry';
+        document.getElementById('experience-edit-id').value = -1;
+        roleInput.value = '';
+        compInput.value = '';
+        timeInput.value = 'Feb 2026 – Present';
+        typeInput.value = 'Full-time';
+        locInput.value = 'India';
+        descInput.value = '';
+        addBulletPointInput('Architecting backend services and APIs.');
+      }
+      modal.style.display = 'flex';
+      roleInput.focus();
+    }
+
+    function addBulletPointInput(val = '') {
+      const container = document.getElementById('bullet-points-list');
+      const div = document.createElement('div');
+      div.style.display = 'flex';
+      div.style.gap = '0.5rem';
+      div.innerHTML = `
+        <input type="text" class="comic-input exp-bp-item" value="${escapeHtml(val)}" placeholder="Bullet point detail">
+        <button type="button" onclick="this.parentElement.remove()" class="comic-btn btn-sm btn-red">✕</button>
+      `;
+      container.appendChild(div);
+    }
+
+    function handleExperienceSave(e) {
+      e.preventDefault();
+      const editIdx = parseInt(document.getElementById('experience-edit-id').value, 10);
+      const role = document.getElementById('exp-role-input').value.trim();
+      const company = document.getElementById('exp-company-input').value.trim();
+      const timeline = document.getElementById('exp-timeline-input').value.trim();
+      const employmentType = document.getElementById('exp-type-input').value;
+      const location = document.getElementById('exp-location-input').value.trim();
+      const description = document.getElementById('exp-desc-input').value.trim();
+
+      const bulletPoints = Array.from(document.querySelectorAll('.exp-bp-item'))
+        .map(inp => inp.value.trim())
+        .filter(Boolean);
+
+      const expData = {
+        id: editIdx >= 0 ? draftContent.experience[editIdx].id : 'exp-' + Date.now().toString().slice(-4),
+        role,
+        company,
+        timeline,
+        employmentType,
+        location,
+        description,
+        bulletPoints
+      };
+
+      if (editIdx >= 0) {
+        draftContent.experience[editIdx] = expData;
+      } else {
+        draftContent.experience.push(expData);
+      }
+      closeModal('experience-modal');
+      markDraftChanged();
+      showToast('Experience saved in draft!', 'success');
+    }
+
+    function confirmDeleteExperience(idx) {
+      const exp = draftContent.experience[idx];
+      pendingDeleteAction = () => {
+        draftContent.experience.splice(idx, 1);
+        markDraftChanged();
+        showToast(`Experience "${exp.role}" deleted.`, 'info');
+      };
+      document.getElementById('delete-modal-msg').innerText = `Are you sure you want to delete experience "${exp.role} at ${exp.company}"?`;
+      document.getElementById('delete-modal').style.display = 'flex';
+    }
+
+    // -------------------------------------------------------------
+    // PUBLISH SECTION & GIT INTEGRATION
+    // -------------------------------------------------------------
+    async function refreshGitStatusAndDiff() {
+      try {
+        const [statusRes, diffRes] = await Promise.all([
+          fetch('/api/git/status', { headers: { 'Authorization': `Bearer ${authToken}` } }),
+          fetch('/api/git/diff', { headers: { 'Authorization': `Bearer ${authToken}` } })
+        ]);
+
+        const statusData = await statusRes.json();
+        const diffData = await diffRes.json();
+
+        // Update Status Display
+        document.getElementById('git-is-repo').innerText = statusData.isGitRepo ? 'Active Repo ✓' : 'Not a Git Repo ✕';
+        document.getElementById('git-is-repo').className = statusData.isGitRepo ? 'font-bold text-green-400' : 'font-bold text-red-400';
+        document.getElementById('git-branch').innerText = statusData.branch || 'None';
+        document.getElementById('git-remote').innerText = statusData.remoteUrl || 'No remote configured';
+        document.getElementById('git-remote').title = statusData.remoteUrl || '';
+
+        if (statusData.latestCommit) {
+          document.getElementById('git-last-commit').innerText = `${statusData.latestCommit.hash.substring(0, 7)}: ${statusData.latestCommit.subject}`;
+        } else {
+          document.getElementById('git-last-commit').innerText = 'No commits yet';
+        }
+
+        // Approved Files Status
+        const setFileStatus = (id, filename) => {
+          const el = document.getElementById(id);
+          const hasChange = statusData.changedApprovedFiles && statusData.changedApprovedFiles.includes(filename);
+          if (hasChange) {
+            el.innerHTML = `<span>📄 ${filename}</span><span class="text-yellow-400 font-bold">Modified</span>`;
+          } else {
+            el.innerHTML = `<span>📄 ${filename}</span><span class="text-gray-400">Clean</span>`;
+          }
+        };
+        setFileStatus('file-status-skills', 'data/skills.json');
+        setFileStatus('file-status-projects', 'data/projects.json');
+        setFileStatus('file-status-experience', 'data/experience.json');
+
+        // Unrelated Warning
+        const unrelatedWarn = document.getElementById('unrelated-warning');
+        const unrelatedList = document.getElementById('unrelated-files-list');
+        if (statusData.unrelatedChanges && statusData.unrelatedChanges.length > 0) {
+          unrelatedWarn.style.display = 'block';
+          unrelatedList.innerText = statusData.unrelatedChanges.slice(0, 5).join(', ') + (statusData.unrelatedChanges.length > 5 ? '...' : '');
+        } else {
+          unrelatedWarn.style.display = 'none';
+        }
+
+        // Diff output
+        const diffOutput = document.getElementById('git-diff-output');
+        diffOutput.innerText = diffData.diff || 'No pending changes in approved content files.';
+      } catch (err) {
+        showToast('Error fetching git status: ' + err.message, 'error');
+      }
+    }
+
+    async function confirmAndPublish() {
+      if (isDraftDirty) {
+        if (!confirm('You have in-memory changes that are not yet saved to disk. Would you like to save them to disk first and then publish?')) {
+          return;
+        }
+        await saveAllChangesToDisk();
+      }
+
+      const commitMessage = document.getElementById('commit-message').value.trim() || 'Update portfolio content';
+
+      const promptMsg = `Are you sure you want to stage approved data files (skills, projects, experience), create commit "${commitMessage}", and push to GitHub?`;
+      if (!confirm(promptMsg)) return;
+
+      const publishBtn = document.getElementById('publish-btn');
+      publishBtn.disabled = true;
+      publishBtn.innerText = '⏳ Publishing to GitHub...';
+
+      try {
+        const res = await fetch('/api/git/publish', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({
+            commitMessage,
+            ignoreUnrelatedWarning: true
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error + (data.guidance ? `\n\nFix: ${data.guidance}` : ''));
+        }
+
+        showToast('🚀 Changes successfully committed and pushed to GitHub!', 'success');
+
+        // Show Success Box
+        const successBox = document.getElementById('publish-success-card');
+        const summaryText = document.getElementById('publish-success-summary');
+        const actionsLink = document.getElementById('publish-actions-link');
+
+        successBox.style.display = 'block';
+        summaryText.innerHTML = `
+          <strong>Commit:</strong> <span class="font-mono text-yellow-300">${data.commitHash.substring(0, 7)}</span><br>
+          <strong>Branch:</strong> <span class="font-mono text-cyan-300">${data.branch}</span><br>
+          <strong>Message:</strong> ${escapeHtml(commitMessage)}
+        `;
+
+        if (data.actionsUrl) {
+          actionsLink.href = data.actionsUrl;
+          actionsLink.style.display = 'inline-flex';
+        } else {
+          actionsLink.style.display = 'none';
+        }
+
+        await refreshGitStatusAndDiff();
+      } catch (err) {
+        alert('Publishing encountered an error:\n\n' + err.message);
+        showToast('Publish failed: ' + err.message, 'error');
+      } finally {
+        publishBtn.disabled = false;
+        publishBtn.innerText = '🚀 Publish to GitHub';
+      }
+    }
+
+    // -------------------------------------------------------------
+    // UTILITY HELPERS
+    // -------------------------------------------------------------
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function executeDelete() {
+      if (pendingDeleteAction) {
+        pendingDeleteAction();
+        pendingDeleteAction = null;
+      }
+      closeModal('delete-modal');
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.innerHTML = `
+        <span style="font-size: 1.25rem;">${type === 'success' ? '⚡' : type === 'error' ? '⚠️' : '🕷️'}</span>
+        <span class="text-sm font-medium">${escapeHtml(message)}</span>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
