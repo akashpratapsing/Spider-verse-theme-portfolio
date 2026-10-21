@@ -4,6 +4,7 @@ import { useTheme } from '../context/ThemeContext';
 
 const EducationWeb: React.FC = () => {
   const { theme } = useTheme();
+  const isBatman = theme === 'batman';
   const isLantern = theme === 'green-lantern';
   const isPanther = theme === 'black-panther';
 
@@ -11,11 +12,13 @@ const EducationWeb: React.FC = () => {
     <section 
       id="education" 
       className={`py-24 px-6 md:px-12 relative overflow-hidden transition-colors duration-400 ${
-        isPanther ? 'bg-[#08090D] wakanda-grid' : isLantern ? 'bg-[#050D0A] construct-grid' : 'bg-[#0A0B1E]'
+        isBatman ? 'bg-[#080A0F] gotham-grid' : isPanther ? 'bg-[#08090D] wakanda-grid' : isLantern ? 'bg-[#050D0A] construct-grid' : 'bg-[#0A0B1E]'
       }`}
     >
       {/* Background radial glow */}
-      {isPanther ? (
+      {isBatman ? (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(245,197,66,0.06)_0%,_rgba(101,117,139,0.04)_50%,_transparent_70%)] pointer-events-none"></div>
+      ) : isPanther ? (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(123,44,255,0.08)_0%,_rgba(0,229,255,0.04)_50%,_transparent_70%)] pointer-events-none"></div>
       ) : isLantern ? (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(0,255,102,0.06)_0%,_transparent_70%)] pointer-events-none"></div>
@@ -24,7 +27,22 @@ const EducationWeb: React.FC = () => {
       )}
 
       <div className="max-w-5xl mx-auto relative z-10">
-        {isPanther ? (
+        {isBatman ? (
+          <div className="mb-20 text-center">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded bg-[#11151D] border border-[#343B48] shadow-[0_0_12px_rgba(245,197,66,0.2)] mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#F5C542] animate-pulse"></span>
+              <span className="font-mono text-xs text-[#F5C542] uppercase tracking-[0.25em]">
+                Wayne Foundation Archives // Scholar Records
+              </span>
+            </div>
+            <h3 className="font-orbitron text-4xl sm:text-5xl md:text-6xl text-[#F4F5F7] uppercase tracking-wider font-extrabold drop-shadow-[0_0_15px_rgba(245,197,66,0.3)]">
+              Academic Dossier
+            </h3>
+            <p className="font-rajdhani text-[#A7AFBC] text-xl font-bold mt-2 tracking-wide">
+              Foundations of Computer Science & Algorithmic Discipline
+            </p>
+          </div>
+        ) : isPanther ? (
           <div className="mb-20 text-center">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-[#0e0f18] border border-[#7B2CFF]/50 shadow-[0_0_12px_rgba(123,44,255,0.25)] mb-3">
               <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse"></span>
@@ -64,7 +82,9 @@ const EducationWeb: React.FC = () => {
           {/* Central Strand */}
           <div 
             className={`absolute left-1/2 transform -translate-x-1/2 w-1 h-full hidden md:block ${
-              isPanther
+              isBatman
+                ? 'bg-gradient-to-b from-[#F5C542] via-[#65758B] to-transparent opacity-40 shadow-[0_0_8px_#F5C542]'
+                : isPanther
                 ? 'bg-gradient-to-b from-[#7B2CFF] via-[#00E5FF] to-transparent opacity-40 shadow-[0_0_8px_#7B2CFF]'
                 : isLantern
                 ? 'bg-gradient-to-b from-[#00FF66] via-[#7CFFB2] to-transparent opacity-30 shadow-[0_0_8px_#00FF66]'
@@ -77,7 +97,51 @@ const EducationWeb: React.FC = () => {
               <div className="flex flex-col md:flex-row items-center gap-12">
                 
                 <div className="w-full md:w-1/2 md:order-1 text-center md:text-right group">
-                  {isPanther ? (
+                  {isBatman ? (
+                    /* Batman Education Card */
+                    <div className="relative bg-[#171C26]/90 border border-[#343B48] p-8 rounded-xl shadow-[0_0_20px_rgba(245,197,66,0.1)] group-hover:border-[#F5C542] group-hover:shadow-[0_0_30px_rgba(245,197,66,0.25)] transition-all duration-300 hover:-translate-y-2 backdrop-blur-sm cursor-default overflow-hidden">
+                      {/* Top Gold Tactical Trim */}
+                      <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#F5C542] to-transparent opacity-80"></div>
+
+                      {/* Tactical Corner Accents */}
+                      <div className="absolute top-0 right-0 w-5 h-5 pointer-events-none">
+                        <div className="absolute top-0 right-0 w-full h-0.5 bg-[#F5C542]"></div>
+                        <div className="absolute top-0 right-0 h-full w-0.5 bg-[#F5C542]"></div>
+                      </div>
+                      <div className="absolute bottom-0 left-0 w-5 h-5 pointer-events-none">
+                        <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#65758B]/60"></div>
+                        <div className="absolute bottom-0 left-0 h-full w-0.5 bg-[#65758B]/60"></div>
+                      </div>
+
+                      <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-[#11151D] border border-[#343B48] text-[#F5C542] text-[10px] font-mono uppercase tracking-widest mb-3">
+                        <span>WAYNE FOUNDATION ACADEMIC REGISTRY</span>
+                      </div>
+
+                      <h4 className="font-orbitron text-2xl md:text-3xl font-bold text-[#F5C542] mb-2 group-hover:text-white transition-colors duration-300">
+                        {edu.degree}
+                      </h4>
+                      <p className="font-rajdhani text-2xl font-bold text-[#F4F5F7] mb-3">
+                        {edu.institution}
+                      </p>
+                      <p className="text-[#080A0F] font-orbitron font-bold tracking-wider uppercase text-xs bg-[#F5C542] inline-block px-3 py-1 rounded shadow-[0_0_10px_rgba(245,197,66,0.4)]">
+                        {edu.period}
+                      </p>
+                      
+                      <div className="mt-4 text-[#A7AFBC] font-rajdhani text-base font-semibold">
+                        Cumulative Performance: <span className="text-[#F5C542] font-bold">GPA {edu.gpa}</span>
+                      </div>
+
+                      <div className="mt-4 pt-3 border-t border-[#343B48]/60 flex items-center justify-between text-[10px] font-mono text-[#A7AFBC]/60 uppercase tracking-widest">
+                        <span>GOTHAM MERIT CREST</span>
+                        <span className="text-[#F5C542]">HONORS DISTINCTION</span>
+                      </div>
+
+                      {/* Visual Connector Dot */}
+                      <div className="absolute top-1/2 -right-[3.75rem] w-6 h-6 bg-[#080A0F] border-2 border-[#F5C542] rounded-full hidden md:flex items-center justify-center z-10 transition-transform duration-300 group-hover:scale-125 shadow-[0_0_10px_#F5C542]">
+                        <div className="w-2 h-2 bg-[#F5C542] rounded-full animate-ping"></div>
+                      </div>
+                    </div>
+                  ) : isPanther ? (
                     /* Black Panther Education Card */
                     <div className="relative bg-[#0e0f18]/90 border border-[#7B2CFF]/40 p-8 rounded-2xl shadow-[0_0_20px_rgba(123,44,255,0.12)] group-hover:border-[#00E5FF] group-hover:shadow-[0_0_35px_rgba(123,44,255,0.4)] transition-all duration-300 hover:-translate-y-2 backdrop-blur-sm cursor-default overflow-hidden">
                       {/* Top Wakandan Chevron Trim */}
@@ -201,7 +265,9 @@ const EducationWeb: React.FC = () => {
                       <div
                         key={i}
                         className={`px-4 py-2 rounded-lg font-rajdhani text-sm font-semibold transition-all duration-300 transform hover:scale-105 cursor-default ${
-                          isPanther
+                          isBatman
+                            ? 'bg-[#171C26] border border-[#343B48] text-[#A7AFBC] hover:border-[#F5C542] hover:text-[#F5C542] hover:shadow-[0_0_12px_rgba(245,197,66,0.25)]'
+                            : isPanther
                             ? 'bg-[#0e0f18] border border-[#7B2CFF]/30 text-[#A9B3C1] hover:border-[#00E5FF] hover:text-[#00E5FF] hover:shadow-[0_0_12px_rgba(0,229,255,0.3)]'
                             : isLantern
                             ? 'bg-[#05140d] border border-[#00FF66]/30 text-[#F5FFF8]/80 hover:border-[#00FF66] hover:text-[#00FF66] hover:shadow-[0_0_12px_rgba(0,255,102,0.25)]'

@@ -5,13 +5,13 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/assets/spider-man-comic-new-seeklogo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Akash Pratap Singh | Superhero Portfolio (Spider-Verse, Green Lantern Corps, Wakanda Vibranium)</title>
+    <title>Akash Pratap Singh | Superhero Portfolio (Spider-Man, Green Lantern, Black Panther, Batman)</title>
     <!-- Prevent Theme Flash (FOUC) -->
     <script>
       (function() {
         try {
           var saved = localStorage.getItem('portfolio_theme');
-          var theme = (saved === 'green-lantern' || saved === 'black-panther') ? saved : 'spiderman';
+          var theme = (saved === 'green-lantern' || saved === 'black-panther' || saved === 'batman') ? saved : 'spiderman';
           document.documentElement.setAttribute('data-theme', theme);
           document.documentElement.classList.add('theme-' + theme);
         } catch(e) {}
@@ -51,6 +51,17 @@
         --theme-border: #7B2CFF;
       }
 
+      :root[data-theme="batman"] {
+        --theme-bg: #080A0F;
+        --theme-text: #F4F5F7;
+        --batman-gold: #F5C542;
+        --batman-gold-muted: #B99532;
+        --batman-steel: #65758B;
+        --batman-card: #171C26;
+        --batman-border: #343B48;
+        --theme-border: #343B48;
+      }
+
       body {
         margin: 0;
         font-family: 'Inter', sans-serif;
@@ -68,6 +79,11 @@
       :root[data-theme="black-panther"] body {
         background-color: #08090D;
         color: #F5F5F5;
+      }
+
+      :root[data-theme="batman"] body {
+        background-color: #080A0F;
+        color: #F4F5F7;
       }
 
       .font-comic { font-family: 'Bangers', cursive; }
@@ -129,6 +145,15 @@
         );
       }
 
+      /* Gotham Noir Tactical Grid & Surveillance Grid */
+      .gotham-grid {
+        background-image: 
+          radial-gradient(circle at 50% 50%, rgba(245, 197, 66, 0.05) 1px, transparent 1px),
+          linear-gradient(rgba(52, 59, 72, 0.35) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(52, 59, 72, 0.35) 1px, transparent 1px);
+        background-size: 32px 32px, 64px 64px, 64px 64px;
+      }
+
       /* Spidey Sense Alert Animation */
       @keyframes spidey-sense {
         0%, 100% {
@@ -181,6 +206,17 @@
         box-shadow: 0 0 35px rgba(123, 44, 255, 0.4), 0 0 15px rgba(0, 229, 255, 0.25);
       }
 
+      /* Batman Gotham Gold & Noir Glow Helpers */
+      .batman-gold-glow {
+        text-shadow: 0 0 12px rgba(245, 197, 66, 0.65), 0 0 28px rgba(185, 149, 50, 0.4);
+      }
+      .batman-box-glow {
+        box-shadow: 0 0 20px rgba(245, 197, 66, 0.18), inset 0 0 15px rgba(245, 197, 66, 0.05);
+      }
+      .batman-box-glow-lg {
+        box-shadow: 0 0 35px rgba(245, 197, 66, 0.25), 0 0 15px rgba(101, 117, 139, 0.2);
+      }
+
       /* Power Ring Pulsing Construct Animation */
       @keyframes ring-pulse {
         0%, 100% {
@@ -211,6 +247,31 @@
         animation: vibranium-pulse 5s ease-in-out infinite;
       }
 
+      /* Bat-Signal Subtle Sweep Animation */
+      @keyframes bat-signal-sweep {
+        0%, 100% {
+          transform: rotate(-10deg) scale(1);
+          opacity: 0.75;
+        }
+        50% {
+          transform: rotate(6deg) scale(1.05);
+          opacity: 0.95;
+        }
+      }
+      .animate-bat-signal {
+        animation: bat-signal-sweep 14s ease-in-out infinite;
+      }
+
+      /* Gotham Atmospheric Fog Drift */
+      @keyframes gotham-fog {
+        0% { transform: translateX(-6%); }
+        50% { transform: translateX(6%); }
+        100% { transform: translateX(-6%); }
+      }
+      .animate-gotham-fog {
+        animation: gotham-fog 24s ease-in-out infinite;
+      }
+
       /* Emerald construct energy scanline */
       @keyframes construct-sweep {
         0% { transform: translateY(-100%); }
@@ -221,6 +282,8 @@
       @media (prefers-reduced-motion: reduce) {
         .animate-ring-pulse,
         .animate-vibranium-pulse,
+        .animate-bat-signal,
+        .animate-gotham-fog,
         .animate-float-slow,
         .glitch::before,
         .glitch::after,

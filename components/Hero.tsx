@@ -51,6 +51,7 @@ const Hero: React.FC<HeroProps> = ({ scroll }) => {
 
   const isLantern = theme === 'green-lantern';
   const isPanther = theme === 'black-panther';
+  const isBatman = theme === 'batman';
 
   // Spider-Man Cobweb Generator
   const radialLines = 24;
@@ -265,6 +266,68 @@ const Hero: React.FC<HeroProps> = ({ scroll }) => {
     );
   };
 
+  // Batman Bat-Signal & Wayne Enterprises Tactical Sonar Construct Generator
+  const renderBatmanConstruct = () => {
+    return (
+      <div className="relative w-full h-full flex items-center justify-center animate-bat-signal">
+        <svg
+          className="w-full h-full text-[#F5C542] opacity-80"
+          viewBox="0 0 500 500"
+          fill="none"
+          stroke="currentColor"
+        >
+          <defs>
+            <radialGradient id="batGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#F5C542" stopOpacity="0.32" />
+              <stop offset="45%" stopColor="#B99532" stopOpacity="0.12" />
+              <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+            </radialGradient>
+            <filter id="batBlur" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="6" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+
+          {/* Core Spotlight Beam Halo */}
+          <circle cx="250" cy="250" r="225" fill="url(#batGlow)" />
+
+          {/* Tactical Radar Concentric Circles */}
+          <circle cx="250" cy="250" r="215" stroke="#343B48" strokeWidth="1.5" strokeDasharray="6 8" className="opacity-60" />
+          <circle cx="250" cy="250" r="180" stroke="#F5C542" strokeWidth="2" strokeDasharray="30 15 10 15" className="opacity-70 animate-[spin_80s_linear_infinite]" />
+          <circle cx="250" cy="250" r="140" stroke="#65758B" strokeWidth="1.5" className="opacity-50" />
+          <circle cx="250" cy="250" r="100" stroke="#F5C542" strokeWidth="2" className="opacity-60" filter="url(#batBlur)" />
+
+          {/* Tactical Crosshairs & Bearing Marks */}
+          <line x1="25" y1="250" x2="475" y2="250" stroke="#343B48" strokeWidth="1" strokeDasharray="4 6" className="opacity-40" />
+          <line x1="250" y1="25" x2="250" y2="475" stroke="#343B48" strokeWidth="1" strokeDasharray="4 6" className="opacity-40" />
+
+          {/* Degree Ticks */}
+          {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
+            <line
+              key={deg}
+              x1={250 + 215 * Math.cos((deg * Math.PI) / 180)}
+              y1={250 + 215 * Math.sin((deg * Math.PI) / 180)}
+              x2={250 + 225 * Math.cos((deg * Math.PI) / 180)}
+              y2={250 + 225 * Math.sin((deg * Math.PI) / 180)}
+              stroke="#F5C542"
+              strokeWidth="2"
+              className="opacity-70"
+            />
+          ))}
+
+          {/* Central Bat-Signal Silhouette */}
+          <g transform="translate(165, 175) scale(7)" filter="url(#batBlur)">
+            <path
+              d="M12 5.5l1.3 2.2c1.7-.2 3.4.4 4.7 1.5-1.1 1.3-1.1 3.1-.3 4.5 2.1-.2 4.1.8 5.3 2.5-3.3 1.5-6.9.5-9-2.2-.4 1.2-1.3 2.1-2 2.2-.7-.1-1.6-1-2-2.2-2.1 2.7-5.7 3.7-9 2.2 1.2-1.7 3.2-2.7 5.3-2.5.8-1.4.8-3.2-.3-4.5 1.3-1.1 3-1.7 4.7-1.5L12 5.5z"
+              fill="#F5C542"
+              fillOpacity="0.85"
+            />
+          </g>
+        </svg>
+      </div>
+    );
+  };
+
   const handleCtaClick = () => {
     if (scroll) {
       try {
@@ -282,19 +345,19 @@ const Hero: React.FC<HeroProps> = ({ scroll }) => {
     <section 
       ref={sectionRef}
       className={`relative min-h-screen flex flex-col justify-center items-start px-6 md:px-20 pt-24 overflow-hidden transition-colors duration-400 ${
-        isPanther ? 'wakanda-grid' : isLantern ? 'construct-grid' : 'honeycomb'
+        isBatman ? 'gotham-grid' : isPanther ? 'wakanda-grid' : isLantern ? 'construct-grid' : 'honeycomb'
       }`}
     >
-      {/* Background Visual Pattern (Spidey Cobweb vs Green Lantern Ring vs Wakanda Vibranium Construct) */}
+      {/* Background Visual Pattern (Spidey Cobweb vs Green Lantern Ring vs Wakanda Vibranium Construct vs Bat-Signal) */}
       <div 
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110vw] h-[110vw] max-w-[1000px] max-h-[1000px] z-0 pointer-events-none transition-transform duration-300 ease-out"
         style={{
-          transform: `translate(calc(-50% + ${mousePos.x * (isPanther ? 30 : isLantern ? 25 : 40)}px), calc(-50% + ${mousePos.y * (isPanther ? 30 : isLantern ? 25 : 40)}px))`,
-          opacity: isPanther ? 0.85 : isLantern ? 0.85 : 0.6,
+          transform: `translate(calc(-50% + ${mousePos.x * (isBatman ? 25 : isPanther ? 30 : isLantern ? 25 : 40)}px), calc(-50% + ${mousePos.y * (isBatman ? 25 : isPanther ? 30 : isLantern ? 25 : 40)}px))`,
+          opacity: isBatman ? 0.9 : isPanther ? 0.85 : isLantern ? 0.85 : 0.6,
         }}
       >
         <div className="w-full h-full">
-          {isPanther ? renderPantherConstruct() : isLantern ? renderLanternConstruct() : (
+          {isBatman ? renderBatmanConstruct() : isPanther ? renderPantherConstruct() : isLantern ? renderLanternConstruct() : (
             <div className="w-full h-full animate-float-slow">
               {renderCobweb()}
             </div>
@@ -305,7 +368,9 @@ const Hero: React.FC<HeroProps> = ({ scroll }) => {
       {/* Atmospheric Ambient Glow Overlay */}
       <div 
         className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${
-          isPanther
+          isBatman
+            ? 'bg-[radial-gradient(circle_at_45%_50%,_rgba(245,197,66,0.12)_0%,_rgba(101,117,139,0.06)_50%,_transparent_75%)]'
+            : isPanther
             ? 'bg-[radial-gradient(circle_at_45%_50%,_rgba(123,44,255,0.15)_0%,_rgba(0,229,255,0.06)_50%,_transparent_75%)]'
             : isLantern
             ? 'bg-[radial-gradient(circle_at_45%_50%,_rgba(0,255,102,0.12)_0%,_transparent_75%)]'
@@ -316,7 +381,85 @@ const Hero: React.FC<HeroProps> = ({ scroll }) => {
 
       {/* Hero Content */}
       <div className="relative z-10 max-w-4xl">
-        {isPanther ? (
+        {isBatman ? (
+          /* ================= BATMAN / THE DARK KNIGHT HERO ================= */
+          <div>
+            {/* Top Diagnostics & Wayne Tactical Telemetry */}
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-lg bg-[#11151D]/90 border border-[#343B48] shadow-[0_0_15px_rgba(0,0,0,0.6)]">
+                <span className="w-2 h-2 rounded-full bg-[#F5C542] animate-ping"></span>
+                <h2 className="font-orbitron text-[#F5C542] text-xs sm:text-sm md:text-base font-bold tracking-[0.25em] uppercase">
+                  Gotham City Surveillance // Wayne Enterprises R&D
+                </h2>
+              </div>
+
+              {/* Batcomputer Tactical Link */}
+              <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#11151D]/90 border border-[#343B48] text-[11px] font-mono text-[#A7AFBC]">
+                <span className="text-[#F5C542] font-bold">BATCOMPUTER:</span>
+                <span>FREQ: 462.8 MHz</span>
+                <span className="text-[#65758B] mx-1">|</span>
+                <span className="text-[#F5C542]">RSA-4096 ENCRYPTED</span>
+              </div>
+            </div>
+
+            {/* Akash Pratap Singh Illuminated Name */}
+            <div className="my-2">
+              <h1 className="font-orbitron text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-[#F4F5F7] uppercase tracking-tight batman-gold-glow leading-none">
+                Akash
+              </h1>
+              <h1 className="font-orbitron text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-[#F5C542] uppercase tracking-tight batman-gold-glow leading-none mt-2 flex flex-wrap items-center gap-3">
+                <span>Pratap Singh</span>
+                <span className="text-[#B99532] text-3xl sm:text-5xl md:text-6xl inline-block drop-shadow-[0_0_12px_#F5C542]">🦇</span>
+              </h1>
+            </div>
+
+            {/* Gotham Cinematic Headline */}
+            <p className="mt-6 font-rajdhani text-2xl md:text-3xl font-bold text-[#F4F5F7] flex flex-wrap gap-x-3 items-center">
+              Engineering 
+              <span className="bg-[#171C26] text-[#F5C542] px-3.5 py-0.5 rounded font-bold shadow-[0_0_18px_rgba(245,197,66,0.25)] border border-[#F5C542]/50">
+                High-Performance Microservices
+              </span> 
+              & Resilient Distributed Cloud Infrastructure
+            </p>
+
+            {/* Batcomputer Forensic Systems Gauge */}
+            <div className="mt-6 p-3.5 rounded-xl bg-[#11151D]/90 border border-[#343B48] max-w-xl shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+              <div className="flex items-center justify-between text-xs font-orbitron font-bold uppercase tracking-wider text-[#A7AFBC] mb-2">
+                <span className="flex items-center gap-2">
+                  <span className="text-[#F5C542]">◈</span>
+                  <span>Batcomputer Core Operational Readiness</span>
+                </span>
+                <span className="text-[#F5C542] font-mono">99.8% OPTIMAL</span>
+              </div>
+              {/* Segmented Gold & Steel-Blue Gauge */}
+              <div className="w-full bg-[#080A0F] h-2.5 rounded-sm overflow-hidden p-0.5 flex gap-1 border border-[#343B48]">
+                <div className="h-full w-[24%] bg-gradient-to-r from-[#B99532] to-[#F5C542] rounded-xs shadow-[0_0_6px_#F5C542]"></div>
+                <div className="h-full w-[24%] bg-gradient-to-r from-[#B99532] to-[#F5C542] rounded-xs shadow-[0_0_6px_#F5C542]"></div>
+                <div className="h-full w-[24%] bg-gradient-to-r from-[#B99532] to-[#F5C542] rounded-xs shadow-[0_0_6px_#F5C542]"></div>
+                <div className="h-full w-[24%] bg-gradient-to-r from-[#65758B] to-[#F5C542] rounded-xs animate-pulse shadow-[0_0_10px_#F5C542]"></div>
+              </div>
+              <div className="flex justify-between items-center text-[10px] font-mono text-[#A7AFBC]/70 uppercase tracking-widest mt-2">
+                <span>WAYNE ENTERPRISES // ADVANCED DEFENSE</span>
+                <span className="text-[#F5C542]">SURVEILLANCE GRID: ONLINE</span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="mt-8 flex flex-col sm:flex-row gap-5 items-start sm:items-center">
+              <button 
+                onClick={handleCtaClick}
+                className="group relative px-8 py-3.5 bg-[#F5C542] hover:bg-[#FCD34D] text-[#080A0F] font-orbitron font-bold text-lg rounded-xl shadow-[0_0_20px_rgba(245,197,66,0.35)] hover:shadow-[0_0_35px_rgba(245,197,66,0.7)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer flex items-center gap-3 border border-[#B99532]"
+              >
+                <span>Access Classified Dossier</span>
+                <span className="group-hover:translate-x-1 transition-transform text-[#080A0F]">⚡</span>
+              </button>
+
+              <div className="flex items-center text-lg md:text-xl font-rajdhani text-[#A7AFBC] italic tracking-wide">
+                "It's not who I am underneath, but what I do that defines me."
+              </div>
+            </div>
+          </div>
+        ) : isPanther ? (
           /* ================= BLACK PANTHER HERO ================= */
           <div>
             {/* Top Diagnostics & Kimoyo Beads HUD */}

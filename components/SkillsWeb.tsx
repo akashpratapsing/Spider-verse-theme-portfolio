@@ -6,16 +6,19 @@ const SkillsWeb: React.FC = () => {
   const { theme } = useTheme();
   const isLantern = theme === 'green-lantern';
   const isPanther = theme === 'black-panther';
+  const isBatman = theme === 'batman';
 
   return (
     <section 
       id="skills" 
       className={`relative py-24 px-6 md:px-12 transition-colors duration-400 ${
-        isPanther ? 'bg-[#08090D] wakanda-grid' : isLantern ? 'bg-[#050D0A] construct-grid' : 'bg-[#0A0B1E]'
+        isBatman ? 'bg-[#080A0F] gotham-grid' : isPanther ? 'bg-[#08090D] wakanda-grid' : isLantern ? 'bg-[#050D0A] construct-grid' : 'bg-[#0A0B1E]'
       }`}
     >
       {/* Background Overlays */}
-      {isPanther ? (
+      {isBatman ? (
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,_rgba(245,197,66,0.06)_0%,_rgba(101,117,139,0.03)_50%,_transparent_75%)] pointer-events-none"></div>
+      ) : isPanther ? (
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,_rgba(123,44,255,0.08)_0%,_rgba(0,229,255,0.04)_50%,_transparent_75%)] pointer-events-none"></div>
       ) : isLantern ? (
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,_rgba(0,255,102,0.06)_0%,_transparent_75%)] pointer-events-none"></div>
@@ -26,7 +29,22 @@ const SkillsWeb: React.FC = () => {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Heading */}
         <div className="mb-16">
-          {isPanther ? (
+          {isBatman ? (
+            <div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-[#11151D] border border-[#343B48] shadow-[0_0_12px_rgba(0,0,0,0.5)] mb-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#F5C542] animate-pulse"></span>
+                <span className="font-orbitron text-xs text-[#F5C542] uppercase tracking-[0.25em]">
+                  Wayne Enterprises R&D // Tactical Capabilities
+                </span>
+              </div>
+              <h3 className="font-orbitron text-4xl sm:text-5xl md:text-6xl text-[#F4F5F7] uppercase tracking-wider font-extrabold batman-gold-glow">
+                Tactical Arsenal
+              </h3>
+              <p className="font-rajdhani text-[#A7AFBC] text-xl md:text-2xl font-bold mt-2 tracking-wide">
+                Distributed Architecture, Forensic Systems & Cloud Infrastructure
+              </p>
+            </div>
+          ) : isPanther ? (
             <div>
               <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-[#0e0f18] border border-[#7B2CFF]/50 shadow-[0_0_12px_rgba(123,44,255,0.25)] mb-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse"></span>
@@ -74,6 +92,63 @@ const SkillsWeb: React.FC = () => {
           {skillCategories.map((cat, idx) => {
             const comicTags = ['THWIP!', 'BAM!', 'POW!', 'ZAP!', 'KAPOW!', 'WHAM!'];
             const comicTag = comicTags[idx % comicTags.length];
+
+            if (isBatman) {
+              return (
+                <div
+                  key={idx}
+                  className="group relative bg-[#171C26]/90 border border-[#343B48] p-7 rounded-xl transition-all duration-300 hover:-translate-y-2 hover:border-[#F5C542] shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(245,197,66,0.25)] backdrop-blur-sm overflow-hidden"
+                >
+                  {/* Tactical Corner Bracket Accents */}
+                  <div className="absolute top-0 right-0 w-8 h-8 pointer-events-none">
+                    <div className="absolute top-0 right-0 w-full h-0.5 bg-[#F5C542] shadow-[0_0_8px_#F5C542]"></div>
+                    <div className="absolute top-0 right-0 h-full w-0.5 bg-[#F5C542] shadow-[0_0_8px_#F5C542]"></div>
+                  </div>
+                  <div className="absolute bottom-0 left-0 w-8 h-8 pointer-events-none">
+                    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#65758B]/60"></div>
+                    <div className="absolute bottom-0 left-0 h-full w-0.5 bg-[#65758B]/60"></div>
+                  </div>
+
+                  {/* Header with Bat-Insignia Badge */}
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="flex items-center gap-3.5">
+                      <div className="w-8 h-8 rounded-lg bg-[#11151D] border border-[#343B48] flex items-center justify-center text-[#F5C542] shadow-[0_0_10px_rgba(245,197,66,0.3)] group-hover:scale-110 group-hover:border-[#F5C542] transition-all">
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 5.5l1.3 2.2c1.7-.2 3.4.4 4.7 1.5-1.1 1.3-1.1 3.1-.3 4.5 2.1-.2 4.1.8 5.3 2.5-3.3 1.5-6.9.5-9-2.2-.4 1.2-1.3 2.1-2 2.2-.7-.1-1.6-1-2-2.2-2.1 2.7-5.7 3.7-9 2.2 1.2-1.7 3.2-2.7 5.3-2.5.8-1.4.8-3.2-.3-4.5 1.3-1.1 3-1.7 4.7-1.5L12 5.5z" />
+                        </svg>
+                      </div>
+                      <h4 className="font-orbitron text-xl md:text-2xl text-[#F4F5F7] uppercase font-bold tracking-wider group-hover:text-[#F5C542] transition-colors">
+                        {cat.title}
+                      </h4>
+                    </div>
+                    <span className="text-[10px] font-mono text-[#F5C542] border border-[#343B48] px-2 py-0.5 rounded bg-[#11151D] hidden sm:inline">
+                      DIV-0{idx + 1}
+                    </span>
+                  </div>
+
+                  {/* Tactical Divider */}
+                  <div className="w-full h-0.5 bg-gradient-to-r from-[#F5C542] via-[#65758B]/60 to-transparent mb-5 rounded-full"></div>
+
+                  {/* Skills List */}
+                  <ul className="space-y-3.5">
+                    {cat.skills.map((skill, sIdx) => (
+                      <li key={sIdx} className="flex items-center gap-3 font-rajdhani text-lg font-semibold text-[#F4F5F7]/90 tracking-wide group-hover:text-[#F4F5F7] transition-colors">
+                        <span className="text-[#F5C542] text-xs font-bold drop-shadow-[0_0_6px_#F5C542]">
+                          ◈
+                        </span>
+                        <span>{skill}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Card Footer Telemetry */}
+                  <div className="mt-6 pt-4 border-t border-[#343B48]/60 flex items-center justify-between text-xs font-mono text-[#A7AFBC]/60 uppercase tracking-widest">
+                    <span>WAYNE ARCHIVE // SEC-0{idx + 1}</span>
+                    <span className="text-[#F5C542]">STATUS: SECURE</span>
+                  </div>
+                </div>
+              );
+            }
 
             if (isPanther) {
               return (
@@ -260,14 +335,16 @@ const SkillsWeb: React.FC = () => {
 
         {/* Footer info bar */}
         <div className={`mt-16 pt-8 border-t flex justify-between items-center text-sm ${
-          isPanther
+          isBatman
+            ? 'border-[#343B48] font-rajdhani text-[#A7AFBC] font-semibold uppercase tracking-wider'
+            : isPanther
             ? 'border-[#7B2CFF]/20 font-rajdhani text-[#A9B3C1] font-semibold uppercase tracking-wider'
             : isLantern 
             ? 'border-[#00FF66]/20 font-rajdhani text-[#7CFFB2]/70 font-semibold uppercase tracking-wider' 
             : 'border-white/5 font-marker text-[#2A7FFF]/60 italic'
         }`}>
-          <span>{isPanther ? '// Shuri Lab Mainframe Synchronized' : isLantern ? '// Oa Mainframe Synchronized' : '// Layered Service Architecture'}</span>
-          <span>{isPanther ? '// Wakanda Prime Ready' : isLantern ? '// Sector 2814 Ready' : '// Multiverse Ready'}</span>
+          <span>{isBatman ? '// Batcomputer Tactical Grid Synchronized' : isPanther ? '// Shuri Lab Mainframe Synchronized' : isLantern ? '// Oa Mainframe Synchronized' : '// Layered Service Architecture'}</span>
+          <span>{isBatman ? '// Wayne Tech Defensive Grid Ready' : isPanther ? '// Wakanda Prime Ready' : isLantern ? '// Sector 2814 Ready' : '// Multiverse Ready'}</span>
         </div>
       </div>
     </section>

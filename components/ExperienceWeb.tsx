@@ -6,16 +6,19 @@ const ExperienceWeb: React.FC = () => {
   const { theme } = useTheme();
   const isLantern = theme === 'green-lantern';
   const isPanther = theme === 'black-panther';
+  const isBatman = theme === 'batman';
 
   return (
     <section 
       id="experience" 
       className={`py-24 px-6 md:px-12 relative overflow-hidden transition-colors duration-400 ${
-        isPanther ? 'bg-[#08090D] wakanda-grid' : isLantern ? 'bg-[#050D0A] construct-grid' : 'bg-[#0A0B1E]'
+        isBatman ? 'bg-[#080A0F] gotham-grid' : isPanther ? 'bg-[#08090D] wakanda-grid' : isLantern ? 'bg-[#050D0A] construct-grid' : 'bg-[#0A0B1E]'
       }`}
     >
       {/* Background radial glow */}
-      {isPanther ? (
+      {isBatman ? (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(245,197,66,0.06)_0%,_rgba(101,117,139,0.03)_50%,_transparent_75%)] pointer-events-none"></div>
+      ) : isPanther ? (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(123,44,255,0.08)_0%,_rgba(0,229,255,0.04)_50%,_transparent_75%)] pointer-events-none"></div>
       ) : isLantern ? (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(0,255,102,0.06)_0%,_transparent_75%)] pointer-events-none"></div>
@@ -26,7 +29,22 @@ const ExperienceWeb: React.FC = () => {
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="flex flex-col items-center mb-20 text-center">
-          {isPanther ? (
+          {isBatman ? (
+            <div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-[#11151D] border border-[#343B48] shadow-[0_0_12px_rgba(0,0,0,0.5)] mb-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#F5C542] animate-pulse"></span>
+                <span className="font-orbitron text-xs text-[#F5C542] uppercase tracking-[0.25em]">
+                  Gotham Operations Log // Tactical Deployments
+                </span>
+              </div>
+              <h3 className="font-orbitron text-4xl sm:text-5xl md:text-6xl text-[#F4F5F7] uppercase tracking-wider font-extrabold batman-gold-glow">
+                Operational Timeline
+              </h3>
+              <p className="font-rajdhani text-[#A7AFBC] text-xl md:text-2xl font-bold mt-2 tracking-wide">
+                Field Engineering Deployments & High-Impact Software Assignments
+              </p>
+            </div>
+          ) : isPanther ? (
             <div>
               <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-[#0e0f18] border border-[#7B2CFF]/50 shadow-[0_0_12px_rgba(123,44,255,0.25)] mb-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse"></span>
@@ -76,7 +94,9 @@ const ExperienceWeb: React.FC = () => {
           {/* Central Timeline Spine for Desktop */}
           <div 
             className={`absolute left-1/2 transform -translate-x-1/2 w-1.5 h-full hidden md:block rounded-full ${
-              isPanther
+              isBatman
+                ? 'bg-gradient-to-b from-[#F5C542] via-[#65758B] to-[#343B48] opacity-60 shadow-[0_0_12px_rgba(245,197,66,0.5)]'
+                : isPanther
                 ? 'bg-gradient-to-b from-[#7B2CFF] via-[#00E5FF] to-[#A9B3C1] opacity-60 shadow-[0_0_12px_rgba(123,44,255,0.6)]'
                 : isLantern
                 ? 'bg-gradient-to-b from-[#00FF66] via-[#7CFFB2] to-[#008F4C] opacity-50 shadow-[0_0_12px_rgba(0,255,102,0.5)]'
@@ -87,7 +107,9 @@ const ExperienceWeb: React.FC = () => {
           {/* Left Timeline Spine for Mobile */}
           <div 
             className={`absolute left-6 top-0 w-1 h-full md:hidden rounded-full ${
-              isPanther
+              isBatman
+                ? 'bg-gradient-to-b from-[#F5C542] via-[#65758B] to-[#343B48] opacity-50'
+                : isPanther
                 ? 'bg-gradient-to-b from-[#7B2CFF] via-[#00E5FF] to-[#A9B3C1] opacity-50'
                 : isLantern
                 ? 'bg-gradient-to-b from-[#00FF66] via-[#7CFFB2] to-[#008F4C] opacity-50'
@@ -109,7 +131,79 @@ const ExperienceWeb: React.FC = () => {
                       isEven ? 'md:pr-14 md:text-right' : 'md:order-2 md:pl-14 md:text-left'
                     }`}
                   >
-                    {isPanther ? (
+                    {isBatman ? (
+                      /* Batman / Wayne Enterprises Dossier Card */
+                      <div
+                        className="group relative bg-[#171C26]/90 border border-[#343B48] p-6 md:p-8 rounded-2xl transition-all duration-300 hover:-translate-y-2 hover:border-[#F5C542] shadow-[0_0_20px_rgba(0,0,0,0.6)] hover:shadow-[0_0_35px_rgba(245,197,66,0.25)] backdrop-blur-sm cursor-default overflow-hidden"
+                      >
+                        {/* Corner Brackets */}
+                        <div className="absolute top-0 right-0 w-6 h-6 pointer-events-none">
+                          <div className="absolute top-0 right-0 w-full h-0.5 bg-[#F5C542]"></div>
+                          <div className="absolute top-0 right-0 h-full w-0.5 bg-[#F5C542]"></div>
+                        </div>
+                        <div className="absolute bottom-0 left-0 w-6 h-6 pointer-events-none">
+                          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#65758B]/50"></div>
+                          <div className="absolute bottom-0 left-0 h-full w-0.5 bg-[#65758B]/50"></div>
+                        </div>
+
+                        {/* Operation File Code */}
+                        <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-[#11151D] border border-[#343B48] text-[#F5C542] text-[10px] font-mono uppercase tracking-widest mb-3">
+                          <span>WAYNE DEFENSE // OP-0{idx + 1}</span>
+                        </div>
+
+                        {/* Role */}
+                        <h4 className="font-orbitron text-2xl md:text-3xl font-bold text-[#F5C542] mb-1 group-hover:text-[#FCD34D] transition-colors duration-300">
+                          {exp.role}
+                        </h4>
+
+                        {/* Company & Location */}
+                        <div className="flex flex-wrap items-center gap-2 mb-4 text-[#A7AFBC] font-rajdhani text-lg font-bold">
+                          <span className="text-[#F4F5F7]">{exp.company}</span>
+                          {exp.location && (
+                            <>
+                              <span className="text-[#65758B]">·</span>
+                              <span className="text-[#65758B] text-base">{exp.location}</span>
+                            </>
+                          )}
+                        </div>
+
+                        {/* Timeline & Tag */}
+                        <div className="flex flex-wrap gap-2.5 items-center mb-4">
+                          <div className="inline-flex items-center gap-2 bg-[#11151D] border border-[#343B48] px-3.5 py-1 rounded-lg text-xs font-mono text-[#F4F5F7]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#F5C542] animate-pulse"></span>
+                            <span>{exp.timeline}</span>
+                          </div>
+                          {exp.employmentType && (
+                            <span className="text-[11px] font-mono uppercase bg-[#11151D] border border-[#343B48] text-[#A7AFBC] px-2.5 py-1 rounded">
+                              {exp.employmentType}
+                            </span>
+                          )}
+                        </div>
+
+                        {exp.description && (
+                          <p className="font-rajdhani text-base md:text-lg font-medium text-[#A7AFBC] mb-4 leading-relaxed">
+                            {exp.description}
+                          </p>
+                        )}
+
+                        {exp.bulletPoints && exp.bulletPoints.length > 0 && (
+                          <ul className="space-y-2 font-rajdhani text-base md:text-lg text-[#F4F5F7]/85 text-left mb-4">
+                            {exp.bulletPoints.map((point, pIdx) => (
+                              <li key={pIdx} className="flex items-start gap-2.5">
+                                <span className="text-[#F5C542] text-xs mt-1.5 drop-shadow-[0_0_6px_#F5C542]">◈</span>
+                                <span className="leading-snug">{point}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+
+                        {/* Mission Dossier Stamp */}
+                        <div className="mt-4 pt-3 border-t border-[#343B48]/60 flex items-center justify-between text-[10px] font-mono text-[#A7AFBC]/60 uppercase tracking-widest">
+                          <span>GOTHAM SURVEILLANCE // LOGGED</span>
+                          <span className="text-[#F5C542]">VERIFIED RECORD</span>
+                        </div>
+                      </div>
+                    ) : isPanther ? (
                       /* Black Panther Card */
                       <div
                         className="group relative bg-[#0e0f18]/90 border border-[#7B2CFF]/40 p-6 md:p-8 rounded-2xl transition-all duration-300 hover:-translate-y-2 hover:border-[#00E5FF] shadow-[0_0_20px_rgba(123,44,255,0.12)] hover:shadow-[0_0_35px_rgba(123,44,255,0.4)] backdrop-blur-sm cursor-default overflow-hidden"
@@ -313,7 +407,9 @@ const ExperienceWeb: React.FC = () => {
 
                   {/* Center Node / Dot (Desktop) */}
                   <div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full hidden md:flex items-center justify-center z-20 group-hover:scale-125 transition-transform ${
-                    isPanther
+                    isBatman
+                      ? 'bg-[#080A0F] border-2 border-[#F5C542] shadow-[0_0_15px_rgba(245,197,66,0.7)]'
+                      : isPanther
                       ? 'bg-[#08090D] border-2 border-[#7B2CFF] shadow-[0_0_14px_rgba(123,44,255,0.8)]'
                       : isLantern
                       ? 'bg-[#050D0A] border-2 border-[#00FF66] shadow-[0_0_12px_rgba(0,255,102,0.8)]'
@@ -321,7 +417,9 @@ const ExperienceWeb: React.FC = () => {
                   }`}>
                     <div
                       className={`w-3.5 h-3.5 rounded-full ${
-                        isPanther
+                        isBatman
+                          ? 'bg-[#F5C542] shadow-[0_0_8px_#F5C542]'
+                          : isPanther
                           ? 'bg-[#00E5FF] shadow-[0_0_8px_#00E5FF] animate-kimoyo'
                           : isLantern
                           ? 'bg-[#00FF66] shadow-[0_0_8px_#7CFFB2]'
@@ -332,14 +430,16 @@ const ExperienceWeb: React.FC = () => {
 
                   {/* Mobile Node Dot */}
                   <div className={`absolute left-6 top-8 -translate-x-1/2 w-6 h-6 rounded-full md:hidden flex items-center justify-center z-20 ${
-                    isPanther
+                    isBatman
+                      ? 'bg-[#080A0F] border-2 border-[#F5C542] shadow-[0_0_10px_rgba(245,197,66,0.7)]'
+                      : isPanther
                       ? 'bg-[#08090D] border-2 border-[#7B2CFF] shadow-[0_0_10px_rgba(123,44,255,0.8)]'
                       : isLantern
                       ? 'bg-[#050D0A] border-2 border-[#00FF66] shadow-[0_0_10px_rgba(0,255,102,0.8)]'
                       : 'bg-[#0A0B1E] border-4 border-black'
                   }`}>
                     <div className={`w-2.5 h-2.5 rounded-full ${
-                      isPanther ? 'bg-[#00E5FF]' : isLantern ? 'bg-[#00FF66]' : 'bg-[#FF375F]'
+                      isBatman ? 'bg-[#F5C542]' : isPanther ? 'bg-[#00E5FF]' : isLantern ? 'bg-[#00FF66]' : 'bg-[#FF375F]'
                     } animate-pulse`}></div>
                   </div>
 
@@ -358,17 +458,19 @@ const ExperienceWeb: React.FC = () => {
         {/* Footer badge */}
         <div className="mt-16 text-center">
           <div className={`inline-flex items-center gap-3 px-5 py-2 rounded-xl backdrop-blur-sm ${
-            isPanther
+            isBatman
+              ? 'bg-[#171C26]/90 border border-[#343B48] shadow-[0_0_15px_rgba(245,197,66,0.2)] text-[#A7AFBC]'
+              : isPanther
               ? 'bg-[#0e0f18]/80 border border-[#7B2CFF]/40 shadow-[0_0_15px_rgba(123,44,255,0.2)] text-[#A9B3C1]'
               : isLantern
               ? 'bg-[#050D0A]/80 border border-[#00FF66]/40 shadow-[0_0_15px_rgba(0,255,102,0.15)] text-[#7CFFB2]'
               : 'bg-black/40 border-2 border-white/10 text-[#F5F5F5]/70'
           }`}>
-            <span className={isPanther ? 'text-[#00E5FF] font-bold' : isLantern ? 'text-[#00FF66] font-bold' : 'text-[#FF375F] font-bold'}>
-              {isPanther ? '◆' : isLantern ? '◈' : '›'}
+            <span className={isBatman ? 'text-[#F5C542] font-bold' : isPanther ? 'text-[#00E5FF] font-bold' : isLantern ? 'text-[#00FF66] font-bold' : 'text-[#FF375F] font-bold'}>
+              {isBatman ? '◈' : isPanther ? '◆' : isLantern ? '◈' : '›'}
             </span>
-            <span className={isPanther ? 'font-orbitron text-xs uppercase tracking-wider text-[#F5F5F5]' : isLantern ? 'font-orbitron text-xs uppercase tracking-wider text-[#F5FFF8]' : 'font-comic text-base tracking-wide'}>
-              {isPanther ? 'Wakanda Design Group // Vibranium Verified Service Record' : isLantern ? 'Sector 2814 Guardian // Verified Interstellar Record' : 'Dimension-hopping across production codebases'}
+            <span className={isBatman ? 'font-mono text-xs uppercase tracking-wider text-[#F4F5F7]' : isPanther ? 'font-orbitron text-xs uppercase tracking-wider text-[#F5F5F5]' : isLantern ? 'font-orbitron text-xs uppercase tracking-wider text-[#F5FFF8]' : 'font-comic text-base tracking-wide'}>
+              {isBatman ? 'Wayne Enterprises // Verified Operational Record • Gotham Dept of Defense' : isPanther ? 'Wakanda Design Group // Vibranium Verified Service Record' : isLantern ? 'Sector 2814 Guardian // Verified Interstellar Record' : 'Dimension-hopping across production codebases'}
             </span>
           </div>
         </div>

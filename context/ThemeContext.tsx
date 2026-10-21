@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { SUPERHERO_THEMES } from '../constants';
 import { SuperheroThemeConfig } from '../types';
 
-export type Theme = 'spiderman' | 'green-lantern' | 'black-panther' | string;
+export type Theme = 'spiderman' | 'green-lantern' | 'black-panther' | 'batman' | string;
 
 interface ThemeContextType {
   theme: Theme;
@@ -36,7 +36,39 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (!AudioCtx) return;
       const audioCtx = new AudioCtx();
 
-      if (theme === 'black-panther') {
+      if (theme === 'batman') {
+        // Gotham Tactical Wayne Enterprises sonar ping & grapple deployment sound
+        const osc = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        osc.type = 'sine';
+        osc2.type = 'sawtooth';
+
+        const now = audioCtx.currentTime;
+        const duration = type === 'switch' ? 0.35 : 0.18;
+
+        // Tactical sonar high-tech click & drop
+        osc.frequency.setValueAtTime(type === 'switch' ? 950 : 800, now);
+        osc.frequency.exponentialRampToValueAtTime(type === 'switch' ? 240 : 180, now + duration);
+
+        osc2.frequency.setValueAtTime(type === 'switch' ? 320 : 220, now);
+        osc2.frequency.exponentialRampToValueAtTime(80, now + duration);
+
+        gainNode.gain.setValueAtTime(0.18, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        osc.connect(gainNode);
+        osc2.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        osc.start();
+        osc2.start();
+        osc.stop(now + duration);
+        osc2.stop(now + duration);
+
+        setTimeout(() => audioCtx.close(), (duration + 0.1) * 1000);
+      } else if (theme === 'black-panther') {
         // Vibranium kinetic resonance / energy pulse sound
         const osc = audioCtx.createOscillator();
         const osc2 = audioCtx.createOscillator();

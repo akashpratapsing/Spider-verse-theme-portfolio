@@ -10,6 +10,7 @@ const BackgroundWeb: React.FC<BackgroundWebProps> = ({ scroll }) => {
   const { theme } = useTheme();
   const isLantern = theme === 'green-lantern';
   const isPanther = theme === 'black-panther';
+  const isBatman = theme === 'batman';
 
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
@@ -31,7 +32,7 @@ const BackgroundWeb: React.FC<BackgroundWebProps> = ({ scroll }) => {
 
     // Spider-Man random glitch effect
     const glitchInterval = setInterval(() => {
-      if (!isLantern && !isPanther && Math.random() > 0.97) {
+      if (!isLantern && !isPanther && !isBatman && Math.random() > 0.97) {
         setGlitch(true);
         setTimeout(() => setGlitch(false), 150);
       }
@@ -109,6 +110,134 @@ const BackgroundWeb: React.FC<BackgroundWebProps> = ({ scroll }) => {
         : 'polygon(50% 0%, 100% 75%, 50% 100%, 0% 75%)' // Chevron shield
     }));
   }, []);
+
+  // Gotham Noir Rain Particles
+  const gothamRain = useMemo(() => {
+    return Array.from({ length: 32 }).map((_, i) => ({
+      id: i,
+      left: ((i * 3.1) % 100),
+      top: ((i * 7.9) % 100),
+      height: 18 + (i % 4) * 8,
+      speed: 0.12 + (i % 3) * 0.05,
+      opacity: 0.12 + (i % 4) * 0.08,
+    }));
+  }, []);
+
+  if (isBatman) {
+    /* ================= BATMAN / GOTHAM NOIR BACKGROUND ================= */
+    return (
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#080A0F] transition-colors duration-400">
+        {/* 1. LAYER: Deep Atmospheric Horizon & Cloud Glow */}
+        <div 
+          className="absolute inset-0 opacity-70"
+          style={{
+            background: `
+              radial-gradient(1100px circle at 50% ${15 + (scrollY * 0.02)}%, rgba(245, 197, 66, 0.06), transparent 70%),
+              radial-gradient(900px circle at 20% ${65 + (scrollY * 0.01)}%, rgba(101, 117, 139, 0.08), transparent 60%),
+              radial-gradient(800px circle at 85% ${75 + (scrollY * 0.01)}%, rgba(23, 28, 38, 0.8), transparent 70%)
+            `,
+          }}
+        ></div>
+
+        {/* 2. LAYER: Gotham Noir Tactical Radar Grid */}
+        <div 
+          className="absolute inset-0 opacity-40 gotham-grid"
+          style={{
+            transform: `translate(${offset.x * 0.1}px, ${offset.y * 0.1}px)`,
+          }}
+        ></div>
+
+        {/* 3. LAYER: Ambient Bat-Signal Searchlight Beam in Upper Sky */}
+        <div 
+          className="absolute top-[-10%] right-[12%] w-[420px] h-[750px] opacity-60 animate-bat-signal pointer-events-none origin-bottom-right"
+          style={{
+            transform: `rotate(${offset.x * 0.05}deg)`,
+          }}
+        >
+          {/* Conical Searchlight Beam */}
+          <div 
+            className="w-full h-full"
+            style={{
+              background: 'linear-gradient(135deg, rgba(245, 197, 66, 0.18) 0%, rgba(245, 197, 66, 0.05) 50%, transparent 80%)',
+              clipPath: 'polygon(75% 100%, 85% 100%, 100% 0%, 20% 0%)',
+              filter: 'blur(10px)',
+            }}
+          ></div>
+
+          {/* Bat-Signal Cloud Projection Halo */}
+          <div className="absolute top-[8%] left-[28%] w-32 h-20 rounded-[50%] bg-[#F5C542]/20 blur-md flex items-center justify-center shadow-[0_0_40px_rgba(245,197,66,0.35)]">
+            {/* Subtle Bat silhouette inside the spotlight */}
+            <svg className="w-16 h-10 text-[#080A0F] opacity-75 drop-shadow-[0_0_4px_#080A0F]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 5.5l1.3 2.2c1.7-.2 3.4.4 4.7 1.5-1.1 1.3-1.1 3.1-.3 4.5 2.1-.2 4.1.8 5.3 2.5-3.3 1.5-6.9.5-9-2.2-.4 1.2-1.3 2.1-2 2.2-.7-.1-1.6-1-2-2.2-2.1 2.7-5.7 3.7-9 2.2 1.2-1.7 3.2-2.7 5.3-2.5.8-1.4.8-3.2-.3-4.5 1.3-1.1 3-1.7 4.7-1.5L12 5.5z" />
+            </svg>
+          </div>
+        </div>
+
+        {/* 4. LAYER: Gotham Atmospheric Drifting Fog */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
+          <div 
+            className="absolute -bottom-10 left-[-20%] w-[140%] h-64 animate-gotham-fog"
+            style={{
+              background: 'radial-gradient(ellipse at 50% 80%, rgba(101, 117, 139, 0.2), transparent 70%)',
+              filter: 'blur(20px)',
+            }}
+          ></div>
+        </div>
+
+        {/* 5. LAYER: Gotham Skyline Silhouette Layer at Horizon */}
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-44 opacity-25 pointer-events-none"
+          style={{
+            transform: `translateY(${Math.min(scrollY * 0.05, 30)}px)`,
+          }}
+        >
+          <svg className="w-full h-full text-[#11151D]" preserveAspectRatio="none" viewBox="0 0 1200 300" fill="currentColor">
+            {/* Distant Gotham Skyscrapers, Towers & Radio Spire silhouette */}
+            <path d="M0,300 L0,220 L30,220 L30,240 L50,240 L50,180 L60,180 L60,150 L65,150 L65,100 L68,100 L68,150 L75,150 L75,180 L90,180 L90,260 L140,260 L140,190 L170,190 L170,160 L185,160 L185,140 L195,140 L195,80 L198,80 L198,140 L210,140 L210,210 L240,210 L240,250 L280,250 L280,170 L310,170 L310,140 L330,140 L330,200 L370,200 L370,230 L400,230 L400,160 L430,160 L430,120 L445,120 L445,60 L448,60 L448,120 L460,120 L460,190 L500,190 L500,240 L560,240 L560,180 L590,180 L590,150 L620,150 L620,220 L670,220 L670,140 L700,140 L700,100 L710,100 L710,50 L713,50 L713,100 L725,100 L725,170 L760,170 L760,240 L810,240 L810,180 L840,180 L840,130 L870,130 L870,200 L910,200 L910,160 L940,160 L940,90 L945,90 L945,40 L948,40 L948,90 L960,90 L960,170 L990,170 L990,230 L1040,230 L1040,170 L1080,170 L1080,130 L1110,130 L1110,210 L1150,210 L1150,250 L1200,250 L1200,300 Z" />
+            {/* Blinking radio beacon lights atop towers */}
+            <circle cx="66" cy="98" r="3" fill="#F5C542" className="animate-pulse" />
+            <circle cx="196" cy="78" r="3" fill="#EF4444" className="animate-pulse" />
+            <circle cx="446" cy="58" r="3" fill="#F5C542" className="animate-pulse" />
+            <circle cx="711" cy="48" r="3" fill="#EF4444" className="animate-pulse" />
+            <circle cx="946" cy="38" r="3" fill="#F5C542" className="animate-pulse" />
+          </svg>
+        </div>
+
+        {/* 6. LAYER: Sparse Gotham Rain Particles */}
+        <div className="absolute inset-0 pointer-events-none">
+          {gothamRain.map((drop) => (
+            <div
+              key={drop.id}
+              className="absolute bg-gradient-to-b from-transparent via-[#65758B] to-[#F4F5F7]"
+              style={{
+                left: `${drop.left}%`,
+                top: `${(drop.top + (scrollY * drop.speed)) % 100}%`,
+                width: '1px',
+                height: `${drop.height}px`,
+                opacity: drop.opacity,
+                transform: 'rotate(-8deg)',
+              }}
+            />
+          ))}
+        </div>
+
+        {/* 7. LAYER: Interactive Tactical Flashlight / Sonar Glow at Cursor */}
+        <div 
+          className="absolute inset-0 z-10"
+          style={{
+            background: `
+              radial-gradient(750px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(245, 197, 66, 0.05), transparent 75%),
+              radial-gradient(350px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(101, 117, 139, 0.09), transparent 60%)
+            `,
+            mixBlendMode: 'plus-lighter'
+          }}
+        ></div>
+
+        {/* 8. LAYER: Dark Cinematic Gotham Noir Vignette */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_transparent_20%,_rgba(8,10,15,0.9)_100%)]"></div>
+      </div>
+    );
+  }
 
   if (isPanther) {
     /* ================= BLACK PANTHER / WAKANDA VIBRANIUM BACKGROUND ================= */

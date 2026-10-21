@@ -6,18 +6,31 @@ const ProjectsGrid: React.FC = () => {
   const { theme } = useTheme();
   const isLantern = theme === "green-lantern";
   const isPanther = theme === "black-panther";
+  const isBatman = theme === "batman";
 
   return (
     <section 
       id="projects" 
       className={`py-24 px-6 md:px-12 transition-colors duration-400 ${
-        isPanther ? "bg-[#08090D] wakanda-grid" : isLantern ? "bg-[#050D0A] construct-grid" : "bg-[#0A0B1E]"
+        isBatman ? "bg-[#080A0F] gotham-grid" : isPanther ? "bg-[#08090D] wakanda-grid" : isLantern ? "bg-[#050D0A] construct-grid" : "bg-[#0A0B1E]"
       }`}
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-16 gap-6">
-          {isPanther ? (
+          {isBatman ? (
+            <div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-[#11151D] border border-[#343B48] shadow-[0_0_12px_rgba(0,0,0,0.5)] mb-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#F5C542] animate-pulse"></span>
+                <span className="font-orbitron text-xs text-[#F5C542] uppercase tracking-[0.25em]">
+                  Wayne Enterprises R&D // Active Investigations
+                </span>
+              </div>
+              <h3 className="font-orbitron text-4xl sm:text-5xl md:text-6xl text-[#F4F5F7] uppercase tracking-wider font-extrabold batman-gold-glow">
+                Gotham Case Files
+              </h3>
+            </div>
+          ) : isPanther ? (
             <div>
               <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-[#0e0f18] border border-[#7B2CFF]/50 shadow-[0_0_12px_rgba(123,44,255,0.25)] mb-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse"></span>
@@ -47,7 +60,12 @@ const ProjectsGrid: React.FC = () => {
             </h3>
           )}
 
-          {isPanther ? (
+          {isBatman ? (
+            <div className="bg-[#11151D] border-2 border-[#343B48] text-[#F5C542] px-5 py-2 rounded-xl font-orbitron text-sm font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(0,0,0,0.5)] flex items-center gap-2">
+              <span>Classified Evidence Dossier</span>
+              <span className="text-[#F5C542]">🦇</span>
+            </div>
+          ) : isPanther ? (
             <div className="bg-[#0e0f18] border-2 border-[#7B2CFF] text-[#00E5FF] px-5 py-2 rounded-xl font-orbitron text-sm font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(123,44,255,0.35)] flex items-center gap-2">
               <span>Classified Vibranium Tech</span>
               <span className="text-[#7B2CFF]">◈</span>
@@ -66,6 +84,105 @@ const ProjectsGrid: React.FC = () => {
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {PROJECTS.map((project, pIdx) => {
+            if (isBatman) {
+              return (
+                <div
+                  key={project.id}
+                  className="group relative bg-[#171C26]/90 border border-[#343B48] p-5 rounded-2xl transition-all duration-300 hover:-translate-y-2 hover:border-[#F5C542] shadow-[0_0_20px_rgba(0,0,0,0.6)] hover:shadow-[0_0_35px_rgba(245,197,66,0.25)] backdrop-blur-sm flex flex-col justify-between overflow-hidden"
+                >
+                  {/* Corner Bracket Details */}
+                  <div className="absolute top-0 right-0 w-6 h-6 pointer-events-none">
+                    <div className="absolute top-0 right-0 w-full h-0.5 bg-[#F5C542]"></div>
+                    <div className="absolute top-0 right-0 h-full w-0.5 bg-[#F5C542]"></div>
+                  </div>
+                  <div className="absolute bottom-0 left-0 w-6 h-6 pointer-events-none">
+                    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#65758B]/50"></div>
+                    <div className="absolute bottom-0 left-0 h-full w-0.5 bg-[#65758B]/50"></div>
+                  </div>
+
+                  <div>
+                    {/* Image Panel */}
+                    <div className="relative overflow-hidden h-52 rounded-xl border border-[#343B48] group-hover:border-[#F5C542] transition-colors">
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#080A0F] via-transparent to-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
+
+                      {/* Case File Badge */}
+                      <div className="absolute top-3 left-3 bg-[#080A0F]/90 border border-[#343B48] px-2.5 py-0.5 rounded-md text-[10px] font-orbitron font-bold text-[#F5C542] uppercase tracking-wider shadow-[0_0_8px_rgba(0,0,0,0.6)] flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#F5C542] animate-pulse"></span>
+                        <span>CASE FILE #00{pIdx + 1}</span>
+                      </div>
+
+                      {/* Status Stamp */}
+                      <div className="absolute top-3 right-3 bg-[#11151D]/90 border border-[#343B48] px-2 py-0.5 rounded text-[9px] font-mono text-[#A7AFBC] uppercase tracking-wider">
+                        CLASSIFIED
+                      </div>
+                    </div>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mt-5">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="font-rajdhani text-xs font-bold uppercase bg-[#11151D] border border-[#343B48] text-[#F5C542] px-2.5 py-0.5 rounded-md tracking-wider group-hover:border-[#F5C542]/40"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <h4 className="font-orbitron text-2xl font-bold mt-4 mb-2 text-[#F4F5F7] group-hover:text-[#F5C542] transition-colors">
+                      {project.title}
+                    </h4>
+                    <p className="font-rajdhani text-base font-medium text-[#A7AFBC] leading-relaxed">
+                      {project.description}
+                    </p>
+                  </div>
+
+                  {/* Actions & Forensic Status */}
+                  <div>
+                    <div className="mt-4 pt-3 border-t border-[#343B48]/60 flex items-center justify-between text-[11px] font-mono text-[#A7AFBC]/70 uppercase tracking-widest mb-3">
+                      <span>SECURITY CLEARANCE:</span>
+                      <span className="text-[#F5C542] font-semibold">LEVEL 5 VERIFIED</span>
+                    </div>
+
+                    <div className="flex gap-2.5">
+                      {(project.link || project.liveDemoUrl) ? (
+                        <a
+                          href={project.link || project.liveDemoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1"
+                        >
+                          <button
+                            className="w-full py-2.5 bg-[#F5C542] hover:bg-[#FCD34D] text-[#080A0F] font-orbitron font-bold text-sm uppercase tracking-wider rounded-lg shadow-[0_0_12px_rgba(245,197,66,0.3)] hover:shadow-[0_0_20px_rgba(245,197,66,0.6)] transition-all cursor-pointer flex items-center justify-center gap-2 border border-[#B99532]"
+                          >
+                            <span>Inspect Evidence</span>
+                            <span className="text-xs">⚡</span>
+                          </button>
+                        </a>
+                      ) : null}
+                      {project.githubUrl && (
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-3.5 py-2.5 bg-[#11151D] border border-[#343B48] hover:border-[#F5C542] text-[#A7AFBC] hover:text-[#F5C542] rounded-lg flex items-center justify-center transition-all cursor-pointer shadow-[0_0_10px_rgba(0,0,0,0.5)]"
+                          title="Source Archive"
+                        >
+                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path fillRule="evenodd" clipRule="evenodd" d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                          </svg>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
             if (isPanther) {
               return (
                 <div
