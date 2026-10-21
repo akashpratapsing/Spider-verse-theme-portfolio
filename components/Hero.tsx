@@ -50,6 +50,7 @@ const Hero: React.FC<HeroProps> = ({ scroll }) => {
   }, [scroll]);
 
   const isLantern = theme === 'green-lantern';
+  const isPanther = theme === 'black-panther';
 
   // Spider-Man Cobweb Generator
   const radialLines = 24;
@@ -184,6 +185,86 @@ const Hero: React.FC<HeroProps> = ({ scroll }) => {
     );
   };
 
+  // Black Panther / Wakanda Vibranium Kinetic Construct Generator
+  const renderPantherConstruct = () => {
+    return (
+      <div className="relative w-full h-full flex items-center justify-center animate-vibranium-pulse">
+        <svg
+          className="w-full h-full text-[#7B2CFF] opacity-80"
+          viewBox="0 0 500 500"
+          fill="none"
+          stroke="currentColor"
+        >
+          <defs>
+            <radialGradient id="vibraniumCoreGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#7B2CFF" stopOpacity="0.45" />
+              <stop offset="35%" stopColor="#5B18D6" stopOpacity="0.2" />
+              <stop offset="70%" stopColor="#00E5FF" stopOpacity="0.08" />
+              <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+            </radialGradient>
+            <filter id="vibraniumBlur" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="7" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+
+          {/* Core Ambient Glow */}
+          <circle cx="250" cy="250" r="230" fill="url(#vibraniumCoreGlow)" />
+
+          {/* Outer Geometric Chevron Ring */}
+          <circle cx="250" cy="250" r="215" strokeWidth="1.5" stroke="#7B2CFF" strokeDasharray="6 14" className="opacity-60" />
+          <circle cx="250" cy="250" r="190" strokeWidth="2" stroke="#00E5FF" strokeDasharray="24 16 8 16" className="opacity-70 animate-[spin_80s_linear_infinite]" />
+
+          {/* Wakandan Claw Necklace Triangles Ring */}
+          {Array.from({ length: 16 }).map((_, i) => {
+            const deg = (i * 360) / 16;
+            const rad = (deg * Math.PI) / 180;
+            const x = 250 + 170 * Math.cos(rad);
+            const y = 250 + 170 * Math.sin(rad);
+            return (
+              <polygon
+                key={`claw-${i}`}
+                points={`${x},${y} ${x - 6 * Math.sin(rad)},${y + 6 * Math.cos(rad)} ${x + 18 * Math.cos(rad)},${y + 18 * Math.sin(rad)}`}
+                fill="#7B2CFF"
+                stroke="#00E5FF"
+                strokeWidth="1"
+                className="opacity-80"
+              />
+            );
+          })}
+
+          {/* Kimoyo Telemetry Axis Lines */}
+          <line x1="250" y1="25" x2="250" y2="475" strokeWidth="0.8" stroke="#00E5FF" strokeDasharray="3 6" className="opacity-40" />
+          <line x1="25" y1="250" x2="475" y2="250" strokeWidth="0.8" stroke="#00E5FF" strokeDasharray="3 6" className="opacity-40" />
+
+          {/* Concentric Energy Geometry */}
+          <circle cx="250" cy="250" r="135" stroke="#7B2CFF" strokeWidth="2.5" className="opacity-85" filter="url(#vibraniumBlur)" />
+          <circle cx="250" cy="250" r="95" stroke="#00E5FF" strokeWidth="1.5" strokeDasharray="8 8" className="opacity-60" />
+
+          {/* Central Panther Mask Crest Emblem */}
+          <g transform="translate(195, 185) scale(2.3)" filter="url(#vibraniumBlur)">
+            {/* Outer Helmet Silhouette */}
+            <path
+              d="M4 4.5L6.5 7.5V11L4 14L8 20.5L12 22L16 20.5L20 14L17.5 11V7.5L20 4.5L16 5.5L12 3L8 5.5L4 4.5Z"
+              fill="#7B2CFF"
+              fillOpacity="0.4"
+              stroke="#00E5FF"
+              strokeWidth="1.2"
+              strokeLinejoin="round"
+            />
+            {/* Slanted Eyes */}
+            <path d="M7.5 10.5L10 12L7.5 12.5Z" fill="#00E5FF" />
+            <path d="M16.5 10.5L14 12L16.5 12.5Z" fill="#00E5FF" />
+            {/* Brow & Nose Bridge */}
+            <path d="M12 5V15" stroke="#A9B3C1" strokeWidth="0.8" />
+            <path d="M10 16L12 17.5L14 16" stroke="#00E5FF" strokeWidth="0.8" />
+            <path d="M9 8.5L12 9.5L15 8.5" stroke="#A9B3C1" strokeWidth="0.8" />
+          </g>
+        </svg>
+      </div>
+    );
+  };
+
   const handleCtaClick = () => {
     if (scroll) {
       try {
@@ -201,19 +282,19 @@ const Hero: React.FC<HeroProps> = ({ scroll }) => {
     <section 
       ref={sectionRef}
       className={`relative min-h-screen flex flex-col justify-center items-start px-6 md:px-20 pt-24 overflow-hidden transition-colors duration-400 ${
-        isLantern ? 'construct-grid' : 'honeycomb'
+        isPanther ? 'wakanda-grid' : isLantern ? 'construct-grid' : 'honeycomb'
       }`}
     >
-      {/* Background Visual Pattern (Spidey Cobweb vs Green Lantern Power Ring Construct) */}
+      {/* Background Visual Pattern (Spidey Cobweb vs Green Lantern Ring vs Wakanda Vibranium Construct) */}
       <div 
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110vw] h-[110vw] max-w-[1000px] max-h-[1000px] z-0 pointer-events-none transition-transform duration-300 ease-out"
         style={{
-          transform: `translate(calc(-50% + ${mousePos.x * (isLantern ? 25 : 40)}px), calc(-50% + ${mousePos.y * (isLantern ? 25 : 40)}px))`,
-          opacity: isLantern ? 0.85 : 0.6,
+          transform: `translate(calc(-50% + ${mousePos.x * (isPanther ? 30 : isLantern ? 25 : 40)}px), calc(-50% + ${mousePos.y * (isPanther ? 30 : isLantern ? 25 : 40)}px))`,
+          opacity: isPanther ? 0.85 : isLantern ? 0.85 : 0.6,
         }}
       >
         <div className="w-full h-full">
-          {isLantern ? renderLanternConstruct() : (
+          {isPanther ? renderPantherConstruct() : isLantern ? renderLanternConstruct() : (
             <div className="w-full h-full animate-float-slow">
               {renderCobweb()}
             </div>
@@ -224,7 +305,9 @@ const Hero: React.FC<HeroProps> = ({ scroll }) => {
       {/* Atmospheric Ambient Glow Overlay */}
       <div 
         className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${
-          isLantern
+          isPanther
+            ? 'bg-[radial-gradient(circle_at_45%_50%,_rgba(123,44,255,0.15)_0%,_rgba(0,229,255,0.06)_50%,_transparent_75%)]'
+            : isLantern
             ? 'bg-[radial-gradient(circle_at_45%_50%,_rgba(0,255,102,0.12)_0%,_transparent_75%)]'
             : 'bg-[radial-gradient(circle_at_50%_50%,_rgba(255,55,95,0.08)_0%,_transparent_70%)]'
         }`}
@@ -233,15 +316,108 @@ const Hero: React.FC<HeroProps> = ({ scroll }) => {
 
       {/* Hero Content */}
       <div className="relative z-10 max-w-4xl">
-        {isLantern ? (
+        {isPanther ? (
+          /* ================= BLACK PANTHER HERO ================= */
+          <div>
+            {/* Top Diagnostics & Kimoyo Beads HUD */}
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-lg bg-[#0e0f18]/90 border border-[#7B2CFF]/60 shadow-[0_0_15px_rgba(123,44,255,0.3)]">
+                <span className="w-2 h-2 rounded-full bg-[#00E5FF] animate-ping"></span>
+                <h2 className="font-orbitron text-[#00E5FF] text-xs sm:text-sm md:text-base font-bold tracking-[0.25em] uppercase">
+                  Wakanda Forever · Vibranium Kinetic Core
+                </h2>
+              </div>
+
+              {/* Kimoyo 5-Bead Array Telemetry */}
+              <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0e0f18]/90 border border-[#7B2CFF]/40 text-[11px] font-mono text-[#A9B3C1]">
+                <span className="text-[#00E5FF] font-bold">KIMOYO:</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#7B2CFF] animate-kimoyo inline-block" title="Nanotech Weave"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#00E5FF] inline-block shadow-[0_0_6px_#00E5FF]" title="Kinetic Absorption"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#7B2CFF] inline-block" title="Stealth Cloak"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#00E5FF] inline-block shadow-[0_0_6px_#00E5FF]" title="Royal Talon Uplink"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#A9B3C1] inline-block" title="Bast Blessing"></span>
+                </div>
+                <span className="text-[#00E5FF] font-semibold ml-1">SYNC 100%</span>
+              </div>
+            </div>
+
+            {/* Akash Pratap Singh Illuminated Name */}
+            <div className="my-2">
+              <h1 className="font-orbitron text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-[#F5F5F5] uppercase tracking-tight vibranium-text-glow leading-none">
+                Akash
+              </h1>
+              <h1 className="font-orbitron text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-[#7B2CFF] uppercase tracking-tight vibranium-text-glow leading-none mt-2 flex flex-wrap items-center gap-3">
+                <span>Pratap Singh</span>
+                <span className="text-[#00E5FF] text-3xl sm:text-5xl md:text-6xl inline-block drop-shadow-[0_0_12px_#00E5FF]">◆</span>
+              </h1>
+            </div>
+
+            {/* Wakandan Cinematic Headline */}
+            <p className="mt-6 font-rajdhani text-2xl md:text-3xl font-bold text-[#F5F5F5] flex flex-wrap gap-x-3 items-center">
+              Forging 
+              <span className="bg-[#7B2CFF] text-[#F5F5F5] px-3 py-0.5 rounded font-bold shadow-[0_0_18px_rgba(123,44,255,0.7)] border border-[#00E5FF]/40">
+                Vibranium Nanotech
+              </span> 
+              into Scalable Microservices & Resilient AI
+            </p>
+
+            {/* Vibranium Kinetic Absorption Gauge & Telemetry Strip */}
+            <div className="mt-6 p-3 rounded-xl bg-[#0e0f18]/90 border border-[#7B2CFF]/40 max-w-xl shadow-[0_0_15px_rgba(123,44,255,0.15)]">
+              <div className="flex items-center justify-between text-xs font-orbitron font-bold uppercase tracking-wider text-[#A9B3C1] mb-2">
+                <span className="flex items-center gap-2">
+                  <span className="text-[#7B2CFF]">◈</span>
+                  <span>Kinetic Energy Absorption</span>
+                </span>
+                <span className="text-[#00E5FF] font-mono">96.8% CHARGED</span>
+              </div>
+              {/* Kinetic Segmented Meter */}
+              <div className="w-full bg-[#161726] h-2.5 rounded-full overflow-hidden p-0.5 flex gap-1">
+                <div className="h-full w-[24%] bg-gradient-to-r from-[#7B2CFF] to-[#00E5FF] rounded-sm"></div>
+                <div className="h-full w-[24%] bg-gradient-to-r from-[#7B2CFF] to-[#00E5FF] rounded-sm"></div>
+                <div className="h-full w-[24%] bg-gradient-to-r from-[#7B2CFF] to-[#00E5FF] rounded-sm"></div>
+                <div className="h-full w-[24%] bg-gradient-to-r from-[#7B2CFF] to-[#00E5FF] rounded-sm animate-pulse"></div>
+              </div>
+              <div className="flex justify-between items-center text-[10px] font-mono text-[#A9B3C1]/70 uppercase tracking-widest mt-2">
+                <span>WDG LAB // BIRNIN ZANA</span>
+                <span className="text-[#00E5FF]">RADIAL SHOCKWAVE READY</span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="mt-8 flex flex-col sm:flex-row gap-5 items-start sm:items-center">
+              <button 
+                onClick={handleCtaClick}
+                className="group relative px-8 py-3.5 bg-[#7B2CFF] hover:bg-[#8F47FF] text-[#F5F5F5] font-orbitron font-bold text-lg rounded-xl shadow-[0_0_20px_rgba(123,44,255,0.6)] hover:shadow-[0_0_35px_rgba(0,229,255,0.8)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer flex items-center gap-3 border border-[#00E5FF]/50"
+              >
+                <span>Deploy Kinetic Systems</span>
+                <span className="group-hover:translate-x-1 transition-transform text-[#00E5FF]">⚡</span>
+              </button>
+
+              <div className="flex items-center text-lg md:text-xl font-rajdhani text-[#A9B3C1] italic tracking-wide">
+                "In times of crisis, the wise build bridges."
+              </div>
+            </div>
+          </div>
+        ) : isLantern ? (
           /* ================= GREEN LANTERN HERO ================= */
           <div>
-            {/* Subtitle Oath */}
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-lg bg-[#05140d]/90 border border-[#00FF66]/50 shadow-[0_0_15px_rgba(0,255,102,0.25)] mb-4">
-              <span className="w-2 h-2 rounded-full bg-[#00FF66] animate-ping"></span>
-              <h2 className="font-orbitron text-[#00FF66] text-sm md:text-base font-bold tracking-[0.25em] uppercase">
-                In brightest day, in blackest night
-              </h2>
+            {/* Subtitle Oath & Sector Telemetry */}
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-lg bg-[#05140d]/90 border border-[#00FF66]/50 shadow-[0_0_15px_rgba(0,255,102,0.25)]">
+                <span className="w-2 h-2 rounded-full bg-[#00FF66] animate-ping"></span>
+                <h2 className="font-orbitron text-[#00FF66] text-xs sm:text-sm md:text-base font-bold tracking-[0.25em] uppercase">
+                  In brightest day, in blackest night
+                </h2>
+              </div>
+
+              {/* Sector 2814 Pill */}
+              <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#05140d]/90 border border-[#00FF66]/30 text-[11px] font-mono text-[#7CFFB2]">
+                <span className="text-[#00FF66] font-bold">SECTOR:</span>
+                <span>2814 (EARTH)</span>
+                <span className="text-[#00FF66] mx-1">|</span>
+                <span>FREQ: 520 THz</span>
+              </div>
             </div>
 
             {/* Akash Pratap Singh Illuminated Name */}
@@ -263,8 +439,30 @@ const Hero: React.FC<HeroProps> = ({ scroll }) => {
               into Scalable Microservices & AI Constructs
             </p>
 
+            {/* Central Battery Willpower Gauge */}
+            <div className="mt-6 p-3 rounded-xl bg-[#05140d]/90 border border-[#00FF66]/40 max-w-xl shadow-[0_0_15px_rgba(0,255,102,0.15)]">
+              <div className="flex items-center justify-between text-xs font-orbitron font-bold uppercase tracking-wider text-[#7CFFB2] mb-2">
+                <span className="flex items-center gap-2">
+                  <span className="text-[#00FF66]">⚡</span>
+                  <span>Power Ring Construct Battery</span>
+                </span>
+                <span className="text-[#00FF66] font-mono">100% OPERATIONAL</span>
+              </div>
+              {/* Segmented Willpower Bar */}
+              <div className="w-full bg-[#0b2319] h-2.5 rounded-full overflow-hidden p-0.5 flex gap-1">
+                <div className="h-full w-[24%] bg-gradient-to-r from-[#008F4C] to-[#00FF66] rounded-sm shadow-[0_0_6px_#00FF66]"></div>
+                <div className="h-full w-[24%] bg-gradient-to-r from-[#008F4C] to-[#00FF66] rounded-sm shadow-[0_0_6px_#00FF66]"></div>
+                <div className="h-full w-[24%] bg-gradient-to-r from-[#008F4C] to-[#00FF66] rounded-sm shadow-[0_0_6px_#00FF66]"></div>
+                <div className="h-full w-[24%] bg-gradient-to-r from-[#008F4C] to-[#7CFFB2] rounded-sm animate-pulse shadow-[0_0_10px_#7CFFB2]"></div>
+              </div>
+              <div className="flex justify-between items-center text-[10px] font-mono text-[#7CFFB2]/70 uppercase tracking-widest mt-2">
+                <span>OA CENTRAL CITADEL LINK</span>
+                <span className="text-[#00FF66]">CONSTRUCT MATRIX: HARD-LIGHT</span>
+              </div>
+            </div>
+
             {/* Action Buttons */}
-            <div className="mt-10 flex flex-col sm:flex-row gap-5 items-start sm:items-center">
+            <div className="mt-8 flex flex-col sm:flex-row gap-5 items-start sm:items-center">
               <button 
                 onClick={handleCtaClick}
                 className="group relative px-8 py-3.5 bg-[#00FF66] text-[#050D0A] font-orbitron font-bold text-lg rounded-xl shadow-[0_0_20px_rgba(0,255,102,0.5)] hover:shadow-[0_0_35px_rgba(124,255,178,0.85)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer flex items-center gap-3"
@@ -281,6 +479,23 @@ const Hero: React.FC<HeroProps> = ({ scroll }) => {
         ) : (
           /* ================= SPIDER-MAN HERO ================= */
           <div>
+            {/* Top Comic Badges: Spidey Sense & Marvel Group */}
+            <div className="flex flex-wrap items-center gap-3 mb-3">
+              {/* Animated Spidey Sense Radar Warning */}
+              <div className="inline-flex items-center gap-2 bg-[#FFDE00] border-2 border-black px-3.5 py-1 -rotate-1 font-comic text-black text-sm uppercase tracking-wider shadow-[3px_3px_0px_0px_#FF375F] animate-spidey-sense">
+                <span className="text-[#FF375F] font-bold">~ ~ ⚡</span>
+                <span>Spidey-Sense Tingling</span>
+                <span className="text-[#FF375F] font-bold">⚡ ~ ~</span>
+              </div>
+
+              {/* Comic Issue Tag */}
+              <div className="hidden sm:inline-flex items-center gap-1.5 bg-[#151735] border-2 border-black px-3 py-1 rotate-1 font-comic text-xs uppercase text-[#F5F5F5] tracking-widest shadow-[3px_3px_0px_0px_#2A7FFF]">
+                <span className="text-[#FF375F]">MARVEL COMICS</span>
+                <span className="text-[#FFDE00]">·</span>
+                <span>VOL 1 #001 · EARTH-616</span>
+              </div>
+            </div>
+
             <h2 className="font-marker text-[#FF375F] text-2xl mb-2 ml-1">Friendly neighbourhood developer</h2>
             
             <div className="space-y-[-1rem]">
@@ -314,12 +529,34 @@ const Hero: React.FC<HeroProps> = ({ scroll }) => {
               Microservices
             </p>
 
-            <div className="mt-12 flex flex-col md:flex-row gap-6">
+            {/* Web Fluid Pressure Meter & Daily Bugle Stamp */}
+            <div className="mt-6 p-3 bg-white/5 border-2 border-black max-w-xl shadow-[4px_4px_0px_0px_#2A7FFF] backdrop-blur-sm">
+              <div className="flex items-center justify-between font-comic text-sm uppercase tracking-wider text-[#FFDE00] mb-1.5">
+                <span className="flex items-center gap-1.5">
+                  <span className="text-[#FF375F]">🕸</span>
+                  <span>Web-Shooter Fluid Pressure</span>
+                </span>
+                <span className="text-white font-sans text-xs font-bold">98% FULL (CARTRIDGE #1)</span>
+              </div>
+              <div className="w-full bg-black/60 h-2.5 border border-white/20 p-0.5 flex gap-1">
+                <div className="h-full w-[24%] bg-[#FF375F]"></div>
+                <div className="h-full w-[24%] bg-[#FF375F]"></div>
+                <div className="h-full w-[24%] bg-[#2A7FFF]"></div>
+                <div className="h-full w-[24%] bg-[#FFDE00] animate-pulse"></div>
+              </div>
+              <div className="flex justify-between items-center text-[10px] font-sans text-[#F5F5F5]/60 uppercase tracking-widest mt-1.5">
+                <span>DAILY BUGLE PRESS // QUEENS, NY</span>
+                <span className="text-[#FFDE00] font-comic text-xs">READY FOR ACTION</span>
+              </div>
+            </div>
+
+            <div className="mt-8 flex flex-col md:flex-row gap-6 items-start md:items-center">
               <button 
                 onClick={handleCtaClick}
-                className="thwip-active bg-[#FF375F] border-4 border-black font-comic text-2xl text-black px-8 py-3 rounded-none shadow-[6px_6px_0px_0px_rgba(255,222,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all outline-none cursor-pointer"
+                className="thwip-active bg-[#FF375F] border-4 border-black font-comic text-2xl text-black px-8 py-3 rounded-none shadow-[6px_6px_0px_0px_rgba(255,222,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all outline-none cursor-pointer flex items-center gap-2"
               >
-                View My Web
+                <span>View My Web</span>
+                <span className="text-xl">🕸</span>
               </button>
               <div className="flex items-center text-xl font-marker text-[#2A7FFF]/80 italic">
                 "With great code comes great responsibility."

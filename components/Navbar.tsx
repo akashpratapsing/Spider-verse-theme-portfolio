@@ -38,18 +38,42 @@ const Navbar: React.FC<NavbarProps> = ({ scroll }) => {
   };
 
   const isLantern = theme === 'green-lantern';
+  const isPanther = theme === 'black-panther';
 
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 md:px-8 py-3.5 transition-colors duration-400 backdrop-blur-md ${
-        isLantern
+        isPanther
+          ? 'bg-[#08090D]/90 border-b border-[#7B2CFF]/40 shadow-[0_4px_25px_rgba(123,44,255,0.18)]'
+          : isLantern
           ? 'bg-[#050D0A]/90 border-b border-[#00FF66]/40 shadow-[0_4px_25px_rgba(0,255,102,0.15)]'
           : 'bg-[#0A0B1E]/90 border-b-4 border-black'
       }`}
     >
-      {/* Logo Speech Bubble (Spidey) vs Power Ring Emblem (Lantern) */}
+      {/* Logo: Spidey Speech Bubble vs Lantern Power Ring vs Wakanda Vibranium Crest */}
       <div className="relative group cursor-pointer shrink-0" onClick={handleLogoClick}>
-        {isLantern ? (
+        {isPanther ? (
+          <div className="flex items-center gap-2.5 bg-[#0e0f18]/90 border-2 border-[#7B2CFF] px-4 py-1.5 rounded-xl shadow-[0_0_15px_rgba(123,44,255,0.35)] group-hover:shadow-[0_0_25px_rgba(0,229,255,0.6)] group-hover:border-[#00E5FF] group-hover:scale-105 transition-all">
+            {/* Wakandan Panther Mask Emblem */}
+            <svg
+              className="w-5 h-5 text-[#00E5FF] animate-pulse"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M4 4.5L6.5 7.5V11L4 14L8 20.5L12 22L16 20.5L20 14L17.5 11V7.5L20 4.5L16 5.5L12 3L8 5.5L4 4.5Z" fill="#7B2CFF" fillOpacity="0.3" />
+              <path d="M7.5 10.5L10 12L7.5 12.5Z" fill="#00E5FF" />
+              <path d="M16.5 10.5L14 12L16.5 12.5Z" fill="#00E5FF" />
+              <path d="M12 6V15" />
+            </svg>
+            <span className="font-orbitron text-lg font-bold text-[#F5F5F5] tracking-widest uppercase">
+              Akash.<span className="text-[#00E5FF]">Wakanda</span>()
+            </span>
+          </div>
+        ) : isLantern ? (
           <div className="flex items-center gap-2.5 bg-[#05140d]/90 border-2 border-[#00FF66] px-4 py-1.5 rounded-xl shadow-[0_0_15px_rgba(0,255,102,0.4)] group-hover:shadow-[0_0_25px_rgba(0,255,102,0.7)] group-hover:scale-105 transition-all">
             {/* Green Lantern Battery SVG Icon */}
             <svg
@@ -93,7 +117,9 @@ const Navbar: React.FC<NavbarProps> = ({ scroll }) => {
             href={item.target}
             onClick={(e) => handleScroll(e, item.target)}
             className={`transition-all duration-300 relative group uppercase ${
-              isLantern
+              isPanther
+                ? 'font-rajdhani text-lg font-bold tracking-widest text-[#F5F5F5]/80 hover:text-[#00E5FF]'
+                : isLantern
                 ? 'font-rajdhani text-lg font-bold tracking-widest text-[#F5FFF8]/80 hover:text-[#00FF66]'
                 : 'font-comic text-xl tracking-wider split-hover'
             }`}
@@ -101,7 +127,11 @@ const Navbar: React.FC<NavbarProps> = ({ scroll }) => {
             {item.label}
             <span
               className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
-                isLantern ? 'bg-[#00FF66] shadow-[0_0_8px_#00FF66]' : 'bg-[#FFDE00]'
+                isPanther
+                  ? 'bg-[#00E5FF] shadow-[0_0_8px_#00E5FF]'
+                  : isLantern
+                  ? 'bg-[#00FF66] shadow-[0_0_8px_#00FF66]'
+                  : 'bg-[#FFDE00]'
               }`}
             ></span>
           </a>
@@ -116,7 +146,7 @@ const Navbar: React.FC<NavbarProps> = ({ scroll }) => {
         {/* Social Icon Container */}
         <div className="relative group flex items-center">
           {/* Spider-Man background web pattern (only in Spider-Man theme) */}
-          {!isLantern && (
+          {!isLantern && !isPanther && (
             <div className="absolute -inset-4 opacity-40 group-hover:opacity-100 transition-all duration-500 pointer-events-none scale-110">
               <svg
                 className="w-full h-full text-[#FF375F]/20 group-hover:text-[#FF375F]/40"
@@ -144,7 +174,9 @@ const Navbar: React.FC<NavbarProps> = ({ scroll }) => {
 
           <div
             className={`flex items-center space-x-2 md:space-x-3 p-1.5 md:p-2 rounded-xl backdrop-blur-sm relative z-10 transition-colors ${
-              isLantern
+              isPanther
+                ? 'bg-[#0e0f18]/85 border border-[#7B2CFF]/40 shadow-[0_0_15px_rgba(123,44,255,0.2)] group-hover:border-[#00E5FF]'
+                : isLantern
                 ? 'bg-[#05140d]/80 border border-[#00FF66]/30 shadow-[0_0_15px_rgba(0,255,102,0.15)] group-hover:border-[#00FF66]'
                 : 'bg-black/40 border-2 border-[#F5F5F5]/20 shadow-[0px_0px_20px_rgba(42,127,255,0.1)] group-hover:border-[#FF375F]/50'
             }`}
@@ -156,7 +188,9 @@ const Navbar: React.FC<NavbarProps> = ({ scroll }) => {
               target="_blank"
               rel="noopener noreferrer"
               className={`p-1 rounded transition-all duration-300 transform hover:scale-115 ${
-                isLantern
+                isPanther
+                  ? 'text-[#F5F5F5]/70 hover:text-[#00E5FF] hover:drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]'
+                  : isLantern
                   ? 'text-[#F5FFF8]/70 hover:text-[#00FF66] hover:drop-shadow-[0_0_8px_rgba(0,255,102,0.8)]'
                   : 'text-[#F5F5F5]/70 hover:text-white'
               }`}
@@ -177,7 +211,9 @@ const Navbar: React.FC<NavbarProps> = ({ scroll }) => {
               target="_blank"
               rel="noopener noreferrer"
               className={`p-1 rounded transition-all duration-300 transform hover:scale-115 ${
-                isLantern
+                isPanther
+                  ? 'text-[#F5F5F5]/70 hover:text-[#00E5FF] hover:drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]'
+                  : isLantern
                   ? 'text-[#F5FFF8]/70 hover:text-[#7CFFB2] hover:drop-shadow-[0_0_8px_rgba(124,255,178,0.8)]'
                   : 'text-[#F5F5F5]/70 hover:text-white'
               }`}
@@ -194,7 +230,9 @@ const Navbar: React.FC<NavbarProps> = ({ scroll }) => {
               target="_blank"
               rel="noopener noreferrer"
               className={`p-1 rounded transition-all duration-300 transform hover:scale-115 ${
-                isLantern
+                isPanther
+                  ? 'text-[#F5F5F5]/70 hover:text-[#00E5FF] hover:drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]'
+                  : isLantern
                   ? 'text-[#F5FFF8]/70 hover:text-[#00FF66] hover:drop-shadow-[0_0_8px_rgba(0,255,102,0.8)]'
                   : 'text-[#F5F5F5]/70 hover:text-white'
               }`}
@@ -211,7 +249,9 @@ const Navbar: React.FC<NavbarProps> = ({ scroll }) => {
               target="_blank"
               rel="noopener noreferrer"
               className={`p-1 rounded transition-all duration-300 transform hover:scale-115 ${
-                isLantern
+                isPanther
+                  ? 'text-[#F5F5F5]/70 hover:text-[#00E5FF] hover:drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]'
+                  : isLantern
                   ? 'text-[#F5FFF8]/70 hover:text-[#00FF66] hover:drop-shadow-[0_0_8px_rgba(0,255,102,0.8)]'
                   : 'text-[#F5F5F5]/70 hover:text-white'
               }`}

@@ -5,19 +5,58 @@ import { SOCIAL_LINKS } from '../constants';
 const Footer: React.FC = () => {
   const { theme } = useTheme();
   const isLantern = theme === 'green-lantern';
+  const isPanther = theme === 'black-panther';
 
   return (
     <footer 
       className={`py-20 px-6 md:px-10 transition-colors duration-400 ${
-        isLantern 
-          ? 'bg-[#050D0A] border-t border-[#00FF66]/40' 
+        isPanther
+          ? 'bg-[#08090D] border-t border-[#7B2CFF]/40 wakanda-grid'
+          : isLantern 
+          ? 'bg-[#050D0A] border-t border-[#00FF66]/40 construct-grid' 
           : 'bg-[#0A0B1E] border-t-8 border-black'
       }`}
     >
       <div className="max-w-4xl mx-auto flex flex-col items-center">
+        {/* Thematic Transmission Header Badge */}
+        <div className="mb-6">
+          {isPanther ? (
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-[#0e0f18] border border-[#7B2CFF]/50 shadow-[0_0_12px_rgba(123,44,255,0.25)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse"></span>
+              <span className="font-orbitron text-xs text-[#00E5FF] uppercase tracking-[0.25em]">
+                Kimoyo Satellite Uplink · Birnin Zana
+              </span>
+            </div>
+          ) : isLantern ? (
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-[#05140d] border border-[#00FF66]/50 shadow-[0_0_12px_rgba(0,255,102,0.2)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00FF66] animate-pulse"></span>
+              <span className="font-orbitron text-xs text-[#00FF66] uppercase tracking-[0.25em]">
+                Sector 2814 Recharge Dock · Oa Beacon
+              </span>
+            </div>
+          ) : (
+            <div className="inline-block bg-[#FFDE00] border-2 border-black font-comic text-xs px-3 py-1 -rotate-2 text-black uppercase tracking-wider shadow-[3px_3px_0px_0px_#FF375F]">
+              THWIP! Drop a message in the web!
+            </div>
+          )}
+        </div>
+
         {/* Email Capsule / Bubble */}
         <div className="relative mb-12 animate-bounce">
-          {isLantern ? (
+          {isPanther ? (
+            <div className="bg-[#0e0f18]/90 border-2 border-[#7B2CFF] px-8 py-4 rounded-2xl text-center shadow-[0_0_25px_rgba(123,44,255,0.4)] hover:shadow-[0_0_35px_rgba(0,229,255,0.6)] hover:border-[#00E5FF] transition-all flex items-center gap-3 backdrop-blur-sm">
+              <svg className="w-5 h-5 text-[#00E5FF]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+              <a 
+                href={`mailto:${SOCIAL_LINKS.email}`} 
+                className="font-orbitron text-[#F5F5F5] text-lg md:text-xl font-bold tracking-wider hover:text-[#00E5FF] transition-colors"
+              >
+                {SOCIAL_LINKS.email}
+              </a>
+            </div>
+          ) : isLantern ? (
             <div className="bg-[#071912] border-2 border-[#00FF66] px-8 py-4 rounded-2xl text-center shadow-[0_0_25px_rgba(0,255,102,0.4)] flex items-center gap-3">
               <svg className="w-5 h-5 text-[#00FF66]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -54,7 +93,9 @@ const Footer: React.FC = () => {
             rel="noopener noreferrer"
             title="LinkedIn Profile"
             className={`group relative flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 ${
-              isLantern
+              isPanther
+                ? 'bg-[#0e0f18] border-2 border-[#7B2CFF] text-[#00E5FF] hover:bg-[#7B2CFF] hover:text-[#F5F5F5] shadow-[0_0_15px_rgba(123,44,255,0.3)] hover:shadow-[0_0_25px_rgba(0,229,255,0.8)]'
+                : isLantern
                 ? 'bg-[#071912] border-2 border-[#00FF66] text-[#00FF66] hover:bg-[#00FF66] hover:text-[#050D0A] shadow-[0_0_15px_rgba(0,255,102,0.3)] hover:shadow-[0_0_25px_rgba(124,255,178,0.8)]'
                 : 'bg-[#2A7FFF] border-4 border-black text-black shadow-[4px_4px_0px_0px_#FFDE00]'
             }`}
@@ -62,7 +103,7 @@ const Footer: React.FC = () => {
             <svg className="w-7 h-7 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24">
               <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
             </svg>
-            {!isLantern && (
+            {!isLantern && !isPanther && (
               <div className="absolute -inset-2 border-2 border-[#2A7FFF] rounded-full opacity-0 group-hover:opacity-100 transition-opacity blur-sm"></div>
             )}
           </a>
@@ -74,7 +115,9 @@ const Footer: React.FC = () => {
             rel="noopener noreferrer"
             title="Twitter / X Profile"
             className={`group relative flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 ${
-              isLantern
+              isPanther
+                ? 'bg-[#0e0f18] border-2 border-[#7B2CFF] text-[#00E5FF] hover:bg-[#7B2CFF] hover:text-[#F5F5F5] shadow-[0_0_15px_rgba(123,44,255,0.3)] hover:shadow-[0_0_25px_rgba(0,229,255,0.8)]'
+                : isLantern
                 ? 'bg-[#071912] border-2 border-[#00FF66] text-[#00FF66] hover:bg-[#00FF66] hover:text-[#050D0A] shadow-[0_0_15px_rgba(0,255,102,0.3)] hover:shadow-[0_0_25px_rgba(124,255,178,0.8)]'
                 : 'bg-[#FF375F] border-4 border-black text-black shadow-[4px_4px_0px_0px_#FFDE00]'
             }`}
@@ -82,14 +125,18 @@ const Footer: React.FC = () => {
             <svg className="w-7 h-7 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.451-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/>
             </svg>
-            {!isLantern && (
+            {!isLantern && !isPanther && (
               <div className="absolute -inset-2 border-2 border-[#FF375F] rounded-full opacity-0 group-hover:opacity-100 transition-opacity blur-sm"></div>
             )}
           </a>
         </div>
 
         {/* Footer Attribution Tagline */}
-        {isLantern ? (
+        {isPanther ? (
+          <p className="font-rajdhani text-[#A9B3C1] text-center font-bold tracking-widest uppercase text-base opacity-90">
+            © {new Date().getFullYear()} Akash Pratap Singh | Wakanda Design Group • Powered by Vibranium & Code
+          </p>
+        ) : isLantern ? (
           <p className="font-rajdhani text-[#7CFFB2] text-center font-bold tracking-widest uppercase text-base opacity-90">
             © {new Date().getFullYear()} Akash Pratap Singh | Sector 2814 • Powered by Willpower & Code
           </p>

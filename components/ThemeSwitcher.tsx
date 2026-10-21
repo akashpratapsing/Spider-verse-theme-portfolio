@@ -10,6 +10,7 @@ export const ThemeSwitcher: React.FC = () => {
   const hoverTimeoutRef = useRef<number | null>(null);
 
   const isLantern = theme === 'green-lantern';
+  const isPanther = theme === 'black-panther';
   const activeThemes = SUPERHERO_THEMES.filter(t => t.status === 'active');
   const upcomingThemes = SUPERHERO_THEMES.filter(t => t.status === 'upcoming');
   const currentThemeConfig = SUPERHERO_THEMES.find(t => t.id === theme) || SUPERHERO_THEMES[0];
@@ -104,6 +105,29 @@ export const ThemeSwitcher: React.FC = () => {
             <circle cx="12" cy="12" r="3" fill="currentColor" />
           </svg>
         );
+      case 'black-panther':
+        return (
+          <svg
+            className={className}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            {/* Outer Panther Helmet / Mask Contour */}
+            <path d="M4 4.5L6.5 7.5V11L4 14L8 20.5L12 22L16 20.5L20 14L17.5 11V7.5L20 4.5L16 5.5L12 3L8 5.5L4 4.5Z" fill="currentColor" fillOpacity="0.15" />
+            {/* Slanted Sleek Panther Eyes */}
+            <path d="M7.5 10.5L10 12L7.5 12.5Z" fill="currentColor" />
+            <path d="M16.5 10.5L14 12L16.5 12.5Z" fill="currentColor" />
+            {/* Vibranium Nose Ridge & Brow Accents */}
+            <path d="M12 6V15" />
+            <path d="M10 16L12 17.5L14 16" />
+            <path d="M9 8.5L12 9.5L15 8.5" />
+          </svg>
+        );
       case 'batman':
         return (
           <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -149,15 +173,19 @@ export const ThemeSwitcher: React.FC = () => {
         aria-label={`Superhero Theme Selector. Current theme: ${currentThemeConfig.name}`}
         onClick={handleToggleClick}
         className={`group relative flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 ${
-          isLantern
+          isPanther
+            ? 'bg-[#0c0d14]/90 border-2 border-[#7B2CFF]/70 text-[#F5F5F5] shadow-[0_0_15px_rgba(123,44,255,0.35)] hover:shadow-[0_0_25px_rgba(0,229,255,0.5)] hover:border-[#00E5FF] focus-visible:ring-[#00E5FF]'
+            : isLantern
             ? 'bg-[#05140d]/90 border-2 border-[#00FF66]/70 text-[#F5FFF8] shadow-[0_0_15px_rgba(0,255,102,0.3)] hover:shadow-[0_0_25px_rgba(0,255,102,0.6)] hover:border-[#00FF66] focus-visible:ring-[#00FF66]'
             : 'bg-[#151735] border-2 border-black text-white shadow-[3px_3px_0px_0px_#FF375F] hover:shadow-[4px_4px_0px_0px_#FFDE00] hover:translate-x-[-1px] hover:translate-y-[-1px] focus-visible:ring-[#FFDE00]'
-        } ${isOpen ? (isLantern ? 'ring-2 ring-[#00FF66] shadow-[0_0_20px_rgba(0,255,102,0.7)]' : 'translate-x-[1px] translate-y-[1px] shadow-[1px_1px_0px_0px_#FF375F]') : ''}`}
+        } ${isOpen ? (isPanther ? 'ring-2 ring-[#00E5FF] shadow-[0_0_20px_rgba(0,229,255,0.6)]' : isLantern ? 'ring-2 ring-[#00FF66] shadow-[0_0_20px_rgba(0,255,102,0.7)]' : 'translate-x-[1px] translate-y-[1px] shadow-[1px_1px_0px_0px_#FF375F]') : ''}`}
       >
         {/* Dynamic Superhero Icon with background halo */}
         <span
           className={`relative flex items-center justify-center w-7 h-7 rounded-full transition-transform duration-300 group-hover:scale-110 ${
-            isLantern
+            isPanther
+              ? 'bg-[#7B2CFF]/25 text-[#00E5FF] border border-[#7B2CFF]/60 shadow-[0_0_10px_rgba(123,44,255,0.5)]'
+              : isLantern
               ? 'bg-[#00FF66]/20 text-[#00FF66] shadow-[0_0_10px_rgba(0,255,102,0.5)]'
               : 'bg-[#FF375F] text-black shadow-[1px_1px_0px_#000]'
           }`}
@@ -169,7 +197,9 @@ export const ThemeSwitcher: React.FC = () => {
         <div className="flex flex-col text-left leading-tight hidden sm:flex">
           <span
             className={`text-xs font-bold uppercase tracking-wider ${
-              isLantern
+              isPanther
+                ? 'font-orbitron text-[#00E5FF]'
+                : isLantern
                 ? 'font-orbitron text-[#00FF66]'
                 : 'font-comic text-[#FFDE00] text-sm tracking-wide'
             }`}
@@ -178,7 +208,11 @@ export const ThemeSwitcher: React.FC = () => {
           </span>
           <span
             className={`text-[9px] uppercase tracking-widest ${
-              isLantern ? 'font-rajdhani text-[#7CFFB2]/80' : 'font-mono text-gray-300'
+              isPanther
+                ? 'font-rajdhani text-[#A9B3C1]'
+                : isLantern
+                ? 'font-rajdhani text-[#7CFFB2]/80'
+                : 'font-mono text-gray-300'
             }`}
           >
             {currentThemeConfig.universe} Universe
@@ -189,7 +223,7 @@ export const ThemeSwitcher: React.FC = () => {
         <svg
           className={`w-3.5 h-3.5 ml-0.5 transition-transform duration-300 ${
             isOpen ? 'rotate-180' : 'rotate-0'
-          } ${isLantern ? 'text-[#00FF66]' : 'text-[#FFDE00]'}`}
+          } ${isPanther ? 'text-[#00E5FF]' : isLantern ? 'text-[#00FF66]' : 'text-[#FFDE00]'}`}
           viewBox="0 0 20 20"
           fill="currentColor"
           aria-hidden="true"
@@ -201,11 +235,17 @@ export const ThemeSwitcher: React.FC = () => {
           />
         </svg>
 
-        {/* Glowing live construct ripple for Lantern / Comic dot for Spidey */}
+        {/* Glowing live construct ripple for Lantern / Vibranium pulse for Panther / Comic dot for Spidey */}
         {isLantern && (
           <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00FF66] opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00FF66]"></span>
+          </span>
+        )}
+        {isPanther && (
+          <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00E5FF] opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#7B2CFF]"></span>
           </span>
         )}
       </button>
@@ -220,7 +260,9 @@ export const ThemeSwitcher: React.FC = () => {
             ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
         } ${
-          isLantern
+          isPanther
+            ? 'bg-[#08090D]/95 backdrop-blur-xl border-2 border-[#7B2CFF]/70 shadow-[0_10px_35px_rgba(123,44,255,0.3)] text-[#F5F5F5]'
+            : isLantern
             ? 'bg-[#050D0A]/95 backdrop-blur-xl border-2 border-[#00FF66]/70 shadow-[0_10px_35px_rgba(0,255,102,0.25)] text-[#F5FFF8]'
             : 'bg-[#101228]/95 backdrop-blur-xl border-4 border-black shadow-[6px_6px_0px_0px_#FF375F] text-white'
         }`}
@@ -228,7 +270,9 @@ export const ThemeSwitcher: React.FC = () => {
         {/* Dropdown Header */}
         <div
           className={`px-4 py-3 border-b flex items-center justify-between ${
-            isLantern
+            isPanther
+              ? 'border-[#7B2CFF]/30 bg-[#0c0d14]/70'
+              : isLantern
               ? 'border-[#00FF66]/30 bg-[#05140d]/70'
               : 'border-white/10 bg-black/40'
           }`}
@@ -236,7 +280,9 @@ export const ThemeSwitcher: React.FC = () => {
           <div className="flex items-center gap-2">
             <span
               className={`p-1.5 rounded-lg ${
-                isLantern
+                isPanther
+                  ? 'bg-[#7B2CFF]/20 text-[#00E5FF]'
+                  : isLantern
                   ? 'bg-[#00FF66]/20 text-[#00FF66]'
                   : 'bg-[#FF375F]/20 text-[#FF375F]'
               }`}
@@ -248,14 +294,22 @@ export const ThemeSwitcher: React.FC = () => {
             <div>
               <h3
                 className={`text-xs font-black uppercase tracking-wider ${
-                  isLantern ? 'font-orbitron text-[#00FF66]' : 'font-comic text-lg text-white'
+                  isPanther
+                    ? 'font-orbitron text-[#00E5FF]'
+                    : isLantern
+                    ? 'font-orbitron text-[#00FF66]'
+                    : 'font-comic text-lg text-white'
                 }`}
               >
                 Superhero Multiverse
               </h3>
               <p
                 className={`text-[10px] ${
-                  isLantern ? 'font-rajdhani text-[#7CFFB2]/70' : 'font-mono text-gray-400'
+                  isPanther
+                    ? 'font-rajdhani text-[#A9B3C1]'
+                    : isLantern
+                    ? 'font-rajdhani text-[#7CFFB2]/70'
+                    : 'font-mono text-gray-400'
                 }`}
               >
                 Hover or click to switch dimension
@@ -265,7 +319,9 @@ export const ThemeSwitcher: React.FC = () => {
 
           <span
             className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
-              isLantern
+              isPanther
+                ? 'bg-[#7B2CFF]/20 text-[#00E5FF] border border-[#7B2CFF]/40'
+                : isLantern
                 ? 'bg-[#00FF66]/20 text-[#00FF66] border border-[#00FF66]/40'
                 : 'bg-[#FFDE00] text-black font-comic'
             }`}
@@ -278,7 +334,11 @@ export const ThemeSwitcher: React.FC = () => {
         <div className="p-3 space-y-2">
           <div
             className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 ${
-              isLantern ? 'font-rajdhani text-[#7CFFB2]/80' : 'font-mono text-gray-400'
+              isPanther
+                ? 'font-rajdhani text-[#00E5FF]/80'
+                : isLantern
+                ? 'font-rajdhani text-[#7CFFB2]/80'
+                : 'font-mono text-gray-400'
             }`}
           >
             Equippable Themes
@@ -295,9 +355,13 @@ export const ThemeSwitcher: React.FC = () => {
                 onClick={() => handleSelectTheme(themeOption.id)}
                 className={`w-full group/card flex items-start gap-3 p-3 rounded-xl transition-all duration-200 cursor-pointer text-left border relative overflow-hidden ${
                   isSelected
-                    ? isLantern
+                    ? isPanther
+                      ? 'bg-[#7B2CFF]/20 border-[#7B2CFF] shadow-[0_0_15px_rgba(123,44,255,0.35)]'
+                      : isLantern
                       ? 'bg-[#00FF66]/15 border-[#00FF66] shadow-[0_0_15px_rgba(0,255,102,0.3)]'
                       : 'bg-[#FF375F]/20 border-[#FF375F] shadow-[3px_3px_0px_#000]'
+                    : isPanther
+                    ? 'bg-[#0c0d14]/50 border-[#7B2CFF]/20 hover:border-[#7B2CFF]/60 hover:bg-[#7B2CFF]/10'
                     : isLantern
                     ? 'bg-[#05140d]/40 border-[#00FF66]/20 hover:border-[#00FF66]/60 hover:bg-[#00FF66]/10'
                     : 'bg-black/20 border-white/10 hover:border-white/30 hover:bg-white/5'
@@ -307,7 +371,11 @@ export const ThemeSwitcher: React.FC = () => {
                 {isSelected && (
                   <span
                     className={`absolute top-0 left-0 bottom-0 w-1 ${
-                      isLantern ? 'bg-[#00FF66]' : 'bg-[#FF375F]'
+                      themeOption.id === 'black-panther'
+                        ? 'bg-[#7B2CFF]'
+                        : themeOption.id === 'green-lantern'
+                        ? 'bg-[#00FF66]'
+                        : 'bg-[#FF375F]'
                     }`}
                   />
                 )}
@@ -315,7 +383,9 @@ export const ThemeSwitcher: React.FC = () => {
                 {/* Theme Hero Badge Icon */}
                 <div
                   className={`shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover/card:scale-110 ${
-                    themeOption.id === 'spiderman'
+                    themeOption.id === 'black-panther'
+                      ? 'bg-[#7B2CFF]/25 text-[#00E5FF] border border-[#7B2CFF]/60 shadow-[0_0_10px_rgba(123,44,255,0.4)]'
+                      : themeOption.id === 'spiderman'
                       ? 'bg-[#FF375F] text-black shadow-[2px_2px_0px_#000]'
                       : 'bg-[#00FF66]/20 text-[#00FF66] border border-[#00FF66]/60 shadow-[0_0_10px_rgba(0,255,102,0.4)]'
                   }`}
@@ -328,10 +398,16 @@ export const ThemeSwitcher: React.FC = () => {
                   <div className="flex items-center justify-between gap-1">
                     <span
                       className={`text-sm font-bold tracking-wide ${
-                        isLantern ? 'font-orbitron' : 'font-comic text-base tracking-wider'
+                        isPanther
+                          ? 'font-orbitron'
+                          : isLantern
+                          ? 'font-orbitron'
+                          : 'font-comic text-base tracking-wider'
                       } ${
                         isSelected
-                          ? isLantern
+                          ? isPanther
+                            ? 'text-[#00E5FF]'
+                            : isLantern
                             ? 'text-[#00FF66]'
                             : 'text-[#FFDE00]'
                           : 'text-white'
@@ -354,7 +430,9 @@ export const ThemeSwitcher: React.FC = () => {
                       {isSelected && (
                         <span
                           className={`flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded uppercase ${
-                            isLantern
+                            themeOption.id === 'black-panther'
+                              ? 'bg-[#7B2CFF] text-white shadow-[0_0_8px_rgba(123,44,255,0.6)]'
+                              : isLantern
                               ? 'bg-[#00FF66] text-[#050D0A]'
                               : 'bg-[#FF375F] text-white shadow-[1px_1px_0px_#000]'
                           }`}
@@ -374,7 +452,11 @@ export const ThemeSwitcher: React.FC = () => {
 
                   <p
                     className={`text-[11px] mt-0.5 line-clamp-1 italic ${
-                      isLantern ? 'font-rajdhani text-[#7CFFB2]/70' : 'font-mono text-gray-300'
+                      isPanther
+                        ? 'font-rajdhani text-[#A9B3C1]'
+                        : isLantern
+                        ? 'font-rajdhani text-[#7CFFB2]/70'
+                        : 'font-mono text-gray-300'
                     }`}
                   >
                     "{themeOption.tagline}"
@@ -403,7 +485,9 @@ export const ThemeSwitcher: React.FC = () => {
                     <span
                       className={`ml-auto text-[10px] font-mono ${
                         isSelected
-                          ? isLantern
+                          ? isPanther
+                            ? 'text-[#00E5FF]'
+                            : isLantern
                             ? 'text-[#00FF66]'
                             : 'text-[#FFDE00]'
                           : 'text-gray-400 group-hover/card:text-white'
@@ -421,7 +505,9 @@ export const ThemeSwitcher: React.FC = () => {
         {/* Section: Future Superhero Themes (Extensible Multiverse) */}
         <div
           className={`p-3 border-t ${
-            isLantern
+            isPanther
+              ? 'border-[#7B2CFF]/20 bg-[#0c0d14]/40'
+              : isLantern
               ? 'border-[#00FF66]/20 bg-[#05140d]/40'
               : 'border-white/10 bg-black/30'
           }`}
@@ -429,7 +515,11 @@ export const ThemeSwitcher: React.FC = () => {
           <div className="flex items-center justify-between mb-2 px-1">
             <span
               className={`text-[10px] font-bold uppercase tracking-wider ${
-                isLantern ? 'font-rajdhani text-[#7CFFB2]/80' : 'font-mono text-gray-400'
+                isPanther
+                  ? 'font-rajdhani text-[#00E5FF]/80'
+                  : isLantern
+                  ? 'font-rajdhani text-[#7CFFB2]/80'
+                  : 'font-mono text-gray-400'
               }`}
             >
               Multiverse Incoming
@@ -445,7 +535,9 @@ export const ThemeSwitcher: React.FC = () => {
                 key={upcoming.id}
                 title={`${upcoming.name} theme coming soon! Extensible theme slot.`}
                 className={`p-2 rounded-xl border flex flex-col items-center text-center transition-all opacity-70 hover:opacity-100 ${
-                  isLantern
+                  isPanther
+                    ? 'bg-[#08090D]/70 border-[#7B2CFF]/20 hover:border-[#7B2CFF]/50 hover:shadow-[0_0_10px_rgba(123,44,255,0.25)]'
+                    : isLantern
                     ? 'bg-[#050D0A]/70 border-[#00FF66]/20 hover:border-[#00FF66]/50 hover:shadow-[0_0_10px_rgba(0,255,102,0.2)]'
                     : 'bg-black/30 border-white/10 hover:border-white/30'
                 }`}
@@ -461,7 +553,11 @@ export const ThemeSwitcher: React.FC = () => {
                 </div>
                 <span
                   className={`text-[11px] font-bold leading-tight ${
-                    isLantern ? 'font-orbitron' : 'font-comic text-xs'
+                    isPanther
+                      ? 'font-orbitron'
+                      : isLantern
+                      ? 'font-orbitron'
+                      : 'font-comic text-xs'
                   }`}
                 >
                   {upcoming.name}

@@ -5,16 +5,19 @@ import { useTheme } from '../context/ThemeContext';
 const ExperienceWeb: React.FC = () => {
   const { theme } = useTheme();
   const isLantern = theme === 'green-lantern';
+  const isPanther = theme === 'black-panther';
 
   return (
     <section 
       id="experience" 
       className={`py-24 px-6 md:px-12 relative overflow-hidden transition-colors duration-400 ${
-        isLantern ? 'bg-[#050D0A] construct-grid' : 'bg-[#0A0B1E]'
+        isPanther ? 'bg-[#08090D] wakanda-grid' : isLantern ? 'bg-[#050D0A] construct-grid' : 'bg-[#0A0B1E]'
       }`}
     >
       {/* Background radial glow */}
-      {isLantern ? (
+      {isPanther ? (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(123,44,255,0.08)_0%,_rgba(0,229,255,0.04)_50%,_transparent_75%)] pointer-events-none"></div>
+      ) : isLantern ? (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(0,255,102,0.06)_0%,_transparent_75%)] pointer-events-none"></div>
       ) : (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(255,55,95,0.06)_0%,_transparent_75%)] pointer-events-none"></div>
@@ -23,7 +26,22 @@ const ExperienceWeb: React.FC = () => {
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="flex flex-col items-center mb-20 text-center">
-          {isLantern ? (
+          {isPanther ? (
+            <div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-[#0e0f18] border border-[#7B2CFF]/50 shadow-[0_0_12px_rgba(123,44,255,0.25)] mb-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse"></span>
+                <span className="font-orbitron text-xs text-[#00E5FF] uppercase tracking-[0.25em]">
+                  Wakandan Royal Service Record
+                </span>
+              </div>
+              <h3 className="font-orbitron text-4xl sm:text-5xl md:text-6xl text-[#F5F5F5] uppercase tracking-wider font-extrabold vibranium-text-glow">
+                Mission Timeline
+              </h3>
+              <p className="font-rajdhani text-[#A9B3C1] text-xl md:text-2xl font-bold mt-2 tracking-wide">
+                Strategic Deployments & Engineering Assignments
+              </p>
+            </div>
+          ) : isLantern ? (
             <div>
               <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-[#05140d] border border-[#00FF66]/50 shadow-[0_0_12px_rgba(0,255,102,0.2)] mb-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#00FF66] animate-pulse"></span>
@@ -58,7 +76,9 @@ const ExperienceWeb: React.FC = () => {
           {/* Central Timeline Spine for Desktop */}
           <div 
             className={`absolute left-1/2 transform -translate-x-1/2 w-1.5 h-full hidden md:block rounded-full ${
-              isLantern
+              isPanther
+                ? 'bg-gradient-to-b from-[#7B2CFF] via-[#00E5FF] to-[#A9B3C1] opacity-60 shadow-[0_0_12px_rgba(123,44,255,0.6)]'
+                : isLantern
                 ? 'bg-gradient-to-b from-[#00FF66] via-[#7CFFB2] to-[#008F4C] opacity-50 shadow-[0_0_12px_rgba(0,255,102,0.5)]'
                 : 'bg-gradient-to-b from-[#FF375F] via-[#2A7FFF] to-[#FFDE00] opacity-40'
             }`}
@@ -67,7 +87,9 @@ const ExperienceWeb: React.FC = () => {
           {/* Left Timeline Spine for Mobile */}
           <div 
             className={`absolute left-6 top-0 w-1 h-full md:hidden rounded-full ${
-              isLantern
+              isPanther
+                ? 'bg-gradient-to-b from-[#7B2CFF] via-[#00E5FF] to-[#A9B3C1] opacity-50'
+                : isLantern
                 ? 'bg-gradient-to-b from-[#00FF66] via-[#7CFFB2] to-[#008F4C] opacity-50'
                 : 'bg-gradient-to-b from-[#FF375F] via-[#2A7FFF] to-[#FFDE00] opacity-30'
             }`}
@@ -87,15 +109,91 @@ const ExperienceWeb: React.FC = () => {
                       isEven ? 'md:pr-14 md:text-right' : 'md:order-2 md:pl-14 md:text-left'
                     }`}
                   >
-                    {isLantern ? (
+                    {isPanther ? (
+                      /* Black Panther Card */
+                      <div
+                        className="group relative bg-[#0e0f18]/90 border border-[#7B2CFF]/40 p-6 md:p-8 rounded-2xl transition-all duration-300 hover:-translate-y-2 hover:border-[#00E5FF] shadow-[0_0_20px_rgba(123,44,255,0.12)] hover:shadow-[0_0_35px_rgba(123,44,255,0.4)] backdrop-blur-sm cursor-default overflow-hidden"
+                      >
+                        {/* Top Chevron Pattern Trim */}
+                        <div className="absolute top-0 left-0 w-full h-1 wakanda-chevron-strip opacity-70"></div>
+
+                        {/* Corner Accents */}
+                        <div className="absolute top-0 right-0 w-6 h-6 pointer-events-none">
+                          <div className="absolute top-0 right-0 w-full h-0.5 bg-[#7B2CFF]"></div>
+                          <div className="absolute top-0 right-0 h-full w-0.5 bg-[#00E5FF]"></div>
+                        </div>
+                        <div className="absolute bottom-0 left-0 w-6 h-6 pointer-events-none">
+                          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#00E5FF]/60"></div>
+                          <div className="absolute bottom-0 left-0 h-full w-0.5 bg-[#7B2CFF]/60"></div>
+                        </div>
+
+                        {/* Wakanda Mission Header Tag */}
+                        <div className={`flex items-center gap-2 mb-3 text-xs font-mono text-[#00E5FF] ${isEven ? 'md:justify-end' : 'md:justify-start'}`}>
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse"></span>
+                          <span>ROYAL MISSION PROTOCOL // #{idx + 1}</span>
+                        </div>
+
+                        {/* Role */}
+                        <h4 className="font-orbitron text-2xl md:text-3xl font-bold text-[#7B2CFF] tracking-wide mb-2 group-hover:text-[#00E5FF] transition-colors leading-tight drop-shadow-[0_0_10px_rgba(123,44,255,0.4)]">
+                          {exp.role}
+                        </h4>
+
+                        {/* Company */}
+                        <p className="font-rajdhani text-2xl md:text-3xl font-bold text-[#F5F5F5] mb-4">
+                          {exp.company}
+                        </p>
+
+                        {/* Timeline */}
+                        <div className={`flex flex-wrap gap-2 items-center mb-3 ${isEven ? 'md:justify-end' : 'md:justify-start'}`}>
+                          <div className="inline-block bg-[#08090D] border border-[#7B2CFF]/60 px-3.5 py-1 rounded-lg shadow-[0_0_8px_rgba(123,44,255,0.25)]">
+                            <span className="font-orbitron text-sm md:text-base text-[#00E5FF] tracking-wider uppercase font-semibold">
+                              {exp.timeline}
+                            </span>
+                          </div>
+                          {exp.employmentType && (
+                            <span className="text-xs font-rajdhani font-bold uppercase bg-[#7B2CFF]/15 border border-[#7B2CFF]/40 text-[#A9B3C1] px-2.5 py-1 rounded tracking-wider">
+                              {exp.employmentType}
+                            </span>
+                          )}
+                        </div>
+
+                        {exp.description && (
+                          <p className="text-base font-rajdhani text-[#F5F5F5]/80 mb-3 leading-relaxed">
+                            {exp.description}
+                          </p>
+                        )}
+
+                        {exp.bulletPoints && exp.bulletPoints.length > 0 && (
+                          <ul className="space-y-2 text-sm md:text-base font-rajdhani text-[#F5F5F5]/75 text-left">
+                            {exp.bulletPoints.map((point, pIdx) => (
+                              <li key={pIdx} className="flex items-start gap-2">
+                                <span className="text-[#00E5FF] font-bold text-base">◆</span>
+                                <span>{point}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+
+                        <div className="mt-4 pt-3 border-t border-[#7B2CFF]/15 flex items-center justify-between text-[10px] font-mono text-[#A9B3C1]/60 uppercase tracking-widest">
+                          <span>CLEARANCE: LEVEL 5</span>
+                          <span className="text-[#00E5FF]">VIBRANIUM STATUS: NOMINAL</span>
+                        </div>
+                      </div>
+                    ) : isLantern ? (
                       /* Green Lantern Card */
                       <div
-                        className="group relative bg-[#071912]/90 border border-[#00FF66]/40 p-6 md:p-8 rounded-2xl transition-all duration-300 hover:-translate-y-2 hover:border-[#00FF66] shadow-[0_0_20px_rgba(0,255,102,0.12)] hover:shadow-[0_0_35px_rgba(0,255,102,0.35)] backdrop-blur-sm cursor-default"
+                        className="group relative bg-[#071912]/90 border border-[#00FF66]/40 p-6 md:p-8 rounded-2xl transition-all duration-300 hover:-translate-y-2 hover:border-[#00FF66] shadow-[0_0_20px_rgba(0,255,102,0.12)] hover:shadow-[0_0_35px_rgba(0,255,102,0.35)] backdrop-blur-sm cursor-default overflow-hidden"
                       >
                         {/* Corner Accents */}
                         <div className="absolute top-0 right-0 w-6 h-6 pointer-events-none">
                           <div className="absolute top-0 right-0 w-full h-0.5 bg-[#00FF66]"></div>
                           <div className="absolute top-0 right-0 h-full w-0.5 bg-[#00FF66]"></div>
+                        </div>
+
+                        {/* Oa Dispatch Header Tag */}
+                        <div className={`flex items-center gap-2 mb-3 text-xs font-mono text-[#00FF66] ${isEven ? 'md:justify-end' : 'md:justify-start'}`}>
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#00FF66] animate-ping"></span>
+                          <span>OA DISPATCH // LOG #{idx + 1}</span>
                         </div>
 
                         {/* Role */}
@@ -138,9 +236,14 @@ const ExperienceWeb: React.FC = () => {
                             ))}
                           </ul>
                         )}
+
+                        <div className="mt-4 pt-3 border-t border-[#00FF66]/15 flex items-center justify-between text-[10px] font-mono text-[#7CFFB2]/60 uppercase tracking-widest">
+                          <span>SECTOR: 2814</span>
+                          <span className="text-[#00FF66]">WILLPOWER COHESION: 100%</span>
+                        </div>
                       </div>
                     ) : (
-                      /* Spider-Man Card */
+                      /* Spider-Man Card with Comic Details */
                       <div
                         className={`group relative bg-[#151735] border-4 border-black p-6 md:p-8 rounded-2xl transition-all duration-300 hover:-translate-y-2 cursor-default ${
                           isEven
@@ -148,11 +251,16 @@ const ExperienceWeb: React.FC = () => {
                             : 'shadow-[8px_8px_0px_0px_#FF375F] hover:shadow-[12px_12px_0px_0px_#2A7FFF]'
                         }`}
                       >
+                        {/* Comic Action Sound Badge */}
+                        <div className="absolute top-3 right-3 bg-[#FFDE00] border-2 border-black font-comic text-black text-xs px-2 py-0.5 rotate-3 uppercase tracking-wider shadow-[2px_2px_0px_0px_#000]">
+                          PAGE #{idx + 1}
+                        </div>
+
                         {/* Spider-sense aura hover effect */}
                         <div className="absolute -inset-1 bg-gradient-to-r from-[#FF375F]/20 to-[#2A7FFF]/20 rounded-2xl opacity-0 group-hover:opacity-100 blur-lg transition-opacity -z-10"></div>
 
                         {/* Comic Halftone Corner Detail */}
-                        <div className="absolute top-0 right-0 w-20 h-20 bg-[radial-gradient(circle,rgba(255,222,0,0.15)_1.5px,transparent_1.5px)] bg-[length:6px_6px] pointer-events-none rounded-tr-xl"></div>
+                        <div className="absolute bottom-0 right-0 w-20 h-20 comic-dots opacity-20 pointer-events-none rounded-br-xl"></div>
 
                         {/* Role */}
                         <h4 className="font-comic text-2xl md:text-4xl text-[#FF375F] tracking-wide mb-2 group-hover:text-[#FFDE00] transition-colors leading-tight">
@@ -194,19 +302,28 @@ const ExperienceWeb: React.FC = () => {
                             ))}
                           </ul>
                         )}
+
+                        <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-comic text-[#2A7FFF] uppercase tracking-wider">
+                          <span>DAILY BUGLE FIELD NOTEBOOK</span>
+                          <span className="text-[#FFDE00]">VERIFIED</span>
+                        </div>
                       </div>
                     )}
                   </div>
 
                   {/* Center Node / Dot (Desktop) */}
                   <div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full hidden md:flex items-center justify-center z-20 group-hover:scale-125 transition-transform ${
-                    isLantern
+                    isPanther
+                      ? 'bg-[#08090D] border-2 border-[#7B2CFF] shadow-[0_0_14px_rgba(123,44,255,0.8)]'
+                      : isLantern
                       ? 'bg-[#050D0A] border-2 border-[#00FF66] shadow-[0_0_12px_rgba(0,255,102,0.8)]'
                       : 'bg-[#0A0B1E] border-4 border-black'
                   }`}>
                     <div
                       className={`w-3.5 h-3.5 rounded-full ${
-                        isLantern
+                        isPanther
+                          ? 'bg-[#00E5FF] shadow-[0_0_8px_#00E5FF] animate-kimoyo'
+                          : isLantern
                           ? 'bg-[#00FF66] shadow-[0_0_8px_#7CFFB2]'
                           : isEven ? 'bg-[#FF375F]' : 'bg-[#2A7FFF]'
                       } animate-pulse`}
@@ -215,12 +332,14 @@ const ExperienceWeb: React.FC = () => {
 
                   {/* Mobile Node Dot */}
                   <div className={`absolute left-6 top-8 -translate-x-1/2 w-6 h-6 rounded-full md:hidden flex items-center justify-center z-20 ${
-                    isLantern
+                    isPanther
+                      ? 'bg-[#08090D] border-2 border-[#7B2CFF] shadow-[0_0_10px_rgba(123,44,255,0.8)]'
+                      : isLantern
                       ? 'bg-[#050D0A] border-2 border-[#00FF66] shadow-[0_0_10px_rgba(0,255,102,0.8)]'
                       : 'bg-[#0A0B1E] border-4 border-black'
                   }`}>
                     <div className={`w-2.5 h-2.5 rounded-full ${
-                      isLantern ? 'bg-[#00FF66]' : 'bg-[#FF375F]'
+                      isPanther ? 'bg-[#00E5FF]' : isLantern ? 'bg-[#00FF66]' : 'bg-[#FF375F]'
                     } animate-pulse`}></div>
                   </div>
 
@@ -239,15 +358,17 @@ const ExperienceWeb: React.FC = () => {
         {/* Footer badge */}
         <div className="mt-16 text-center">
           <div className={`inline-flex items-center gap-3 px-5 py-2 rounded-xl backdrop-blur-sm ${
-            isLantern
-              ? 'bg-[#05140d]/80 border border-[#00FF66]/40 shadow-[0_0_15px_rgba(0,255,102,0.15)] text-[#7CFFB2]'
+            isPanther
+              ? 'bg-[#0e0f18]/80 border border-[#7B2CFF]/40 shadow-[0_0_15px_rgba(123,44,255,0.2)] text-[#A9B3C1]'
+              : isLantern
+              ? 'bg-[#050D0A]/80 border border-[#00FF66]/40 shadow-[0_0_15px_rgba(0,255,102,0.15)] text-[#7CFFB2]'
               : 'bg-black/40 border-2 border-white/10 text-[#F5F5F5]/70'
           }`}>
-            <span className={isLantern ? 'text-[#00FF66] font-bold' : 'text-[#FF375F] font-bold'}>
-              {isLantern ? '◈' : '›'}
+            <span className={isPanther ? 'text-[#00E5FF] font-bold' : isLantern ? 'text-[#00FF66] font-bold' : 'text-[#FF375F] font-bold'}>
+              {isPanther ? '◆' : isLantern ? '◈' : '›'}
             </span>
-            <span className={isLantern ? 'font-rajdhani text-lg font-bold tracking-wider uppercase' : 'font-comic text-lg tracking-wider'}>
-              {isLantern ? 'Sector 2814 Guardian // Verified Interstellar Record' : 'Dimension-hopping across production codebases'}
+            <span className={isPanther ? 'font-orbitron text-xs uppercase tracking-wider text-[#F5F5F5]' : isLantern ? 'font-orbitron text-xs uppercase tracking-wider text-[#F5FFF8]' : 'font-comic text-base tracking-wide'}>
+              {isPanther ? 'Wakanda Design Group // Vibranium Verified Service Record' : isLantern ? 'Sector 2814 Guardian // Verified Interstellar Record' : 'Dimension-hopping across production codebases'}
             </span>
           </div>
         </div>

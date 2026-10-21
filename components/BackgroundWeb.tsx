@@ -9,6 +9,7 @@ interface BackgroundWebProps {
 const BackgroundWeb: React.FC<BackgroundWebProps> = ({ scroll }) => {
   const { theme } = useTheme();
   const isLantern = theme === 'green-lantern';
+  const isPanther = theme === 'black-panther';
 
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
@@ -30,7 +31,7 @@ const BackgroundWeb: React.FC<BackgroundWebProps> = ({ scroll }) => {
 
     // Spider-Man random glitch effect
     const glitchInterval = setInterval(() => {
-      if (!isLantern && Math.random() > 0.97) {
+      if (!isLantern && !isPanther && Math.random() > 0.97) {
         setGlitch(true);
         setTimeout(() => setGlitch(false), 150);
       }
@@ -55,7 +56,7 @@ const BackgroundWeb: React.FC<BackgroundWebProps> = ({ scroll }) => {
       window.removeEventListener('scroll', handleWindowScroll);
       clearInterval(glitchInterval);
     };
-  }, [scroll, isLantern]);
+  }, [scroll, isLantern, isPanther]);
 
   // Spider-Man Multiverse Shards
   const spiderShards = useMemo(() => {
@@ -89,6 +90,106 @@ const BackgroundWeb: React.FC<BackgroundWebProps> = ({ scroll }) => {
         : 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' // Diamond
     }));
   }, []);
+
+  // Black Panther / Wakanda Vibranium Shards & Kimoyo Beads
+  const pantherShards = useMemo(() => {
+    return Array.from({ length: 14 }).map((_, i) => ({
+      id: i,
+      width: Math.random() * 220 + 70,
+      height: Math.random() * 220 + 70,
+      top: Math.random() * 100,
+      left: Math.random() * 100,
+      rotate: Math.random() * 360,
+      speed: Math.random() * 0.08 + 0.03,
+      color: i % 3 === 0 ? 'rgba(123, 44, 255, 0.08)' : i % 3 === 1 ? 'rgba(0, 229, 255, 0.06)' : 'rgba(169, 179, 193, 0.04)',
+      clipPath: i % 3 === 0
+        ? 'polygon(50% 0%, 100% 100%, 0% 100%)' // Triangle / Claw tooth
+        : i % 3 === 1
+        ? 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' // Diamond / Vibranium lattice
+        : 'polygon(50% 0%, 100% 75%, 50% 100%, 0% 75%)' // Chevron shield
+    }));
+  }, []);
+
+  if (isPanther) {
+    /* ================= BLACK PANTHER / WAKANDA VIBRANIUM BACKGROUND ================= */
+    return (
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#08090D] transition-colors duration-400">
+        {/* 1. LAYER: Vibranium Kinetic Energy Aurora Gradient */}
+        <div 
+          className="absolute inset-0 opacity-60"
+          style={{
+            background: `
+              radial-gradient(1000px circle at 50% ${25 + (scrollY * 0.02)}%, rgba(123, 44, 255, 0.18), transparent 70%),
+              radial-gradient(700px circle at 80% ${60 + (scrollY * 0.01)}%, rgba(0, 229, 255, 0.08), transparent 60%)
+            `,
+          }}
+        ></div>
+
+        {/* 2. LAYER: Wakandan Geometric Weave & Triangular Lattice Grid */}
+        <div 
+          className="absolute inset-0 opacity-35 wakanda-grid"
+          style={{
+            transform: `translate(${offset.x * 0.12}px, ${offset.y * 0.12}px)`,
+          }}
+        ></div>
+
+        {/* 3. LAYER: Floating Vibranium Shards & Kinetic Teeth */}
+        {pantherShards.map((shard) => (
+          <div
+            key={shard.id}
+            className="absolute transition-transform duration-300"
+            style={{
+              width: `${shard.width}px`,
+              height: `${shard.height}px`,
+              top: `${shard.top}%`,
+              left: `${shard.left}%`,
+              backgroundColor: shard.color,
+              clipPath: shard.clipPath,
+              transform: `translate(${offset.x * shard.speed}px, ${offset.y * shard.speed + (scrollY * shard.speed * -0.4)}px) rotate(${shard.rotate + (scrollY * 0.015)}deg)`,
+              border: '1px solid rgba(123, 44, 255, 0.22)',
+              boxShadow: '0 0 15px rgba(123, 44, 255, 0.08)',
+              backdropFilter: 'blur(1px)',
+            }}
+          />
+        ))}
+
+        {/* 4. LAYER: Kinetic Nano-Quanta & Kimoyo Energy Beads */}
+        <div className="absolute inset-0">
+          {Array.from({ length: 24 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                width: `${(i % 3) + 2}px`,
+                height: `${(i % 3) + 2}px`,
+                top: `${(i * 17) % 100}%`,
+                left: `${(i * 31) % 100}%`,
+                backgroundColor: i % 2 === 0 ? '#7B2CFF' : '#00E5FF',
+                opacity: 0.35 + (i % 5) * 0.1,
+                boxShadow: i % 2 === 0 ? '0 0 8px #7B2CFF' : '0 0 10px #00E5FF',
+                transform: `translateY(${Math.sin((scrollY + i * 85) * 0.01) * 16}px)`,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* 5. LAYER: Interactive Kinetic Pulse Glow at Cursor */}
+        <div 
+          className="absolute inset-0 z-10"
+          style={{
+            background: `
+              radial-gradient(750px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(123, 44, 255, 0.12), transparent 75%),
+              radial-gradient(350px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(0, 229, 255, 0.15), transparent 60%)
+            `,
+            mixBlendMode: 'plus-lighter'
+          }}
+        ></div>
+
+        {/* 6. LAYER: Metallic Vignette Border */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_transparent_25%,_rgba(8,9,13,0.9)_100%)]"></div>
+      </div>
+    );
+  }
 
   if (isLantern) {
     /* ================= GREEN LANTERN COSMIC BACKGROUND ================= */

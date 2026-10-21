@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { SUPERHERO_THEMES } from '../constants';
 import { SuperheroThemeConfig } from '../types';
 
-export type Theme = 'spiderman' | 'green-lantern' | string;
+export type Theme = 'spiderman' | 'green-lantern' | 'black-panther' | string;
 
 interface ThemeContextType {
   theme: Theme;
@@ -36,7 +36,41 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (!AudioCtx) return;
       const audioCtx = new AudioCtx();
 
-      if (theme === 'green-lantern') {
+      if (theme === 'black-panther') {
+        // Vibranium kinetic resonance / energy pulse sound
+        const osc = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        osc.type = 'sine';
+        osc2.type = 'triangle';
+
+        const now = audioCtx.currentTime;
+        const duration = type === 'switch' ? 0.38 : 0.2;
+
+        // Low kinetic resonance sweep
+        osc.frequency.setValueAtTime(type === 'switch' ? 180 : 220, now);
+        osc.frequency.exponentialRampToValueAtTime(type === 'switch' ? 520 : 440, now + duration * 0.7);
+        osc.frequency.exponentialRampToValueAtTime(110, now + duration);
+
+        osc2.frequency.setValueAtTime(type === 'switch' ? 360 : 440, now);
+        osc2.frequency.exponentialRampToValueAtTime(880, now + duration * 0.5);
+        osc2.frequency.exponentialRampToValueAtTime(220, now + duration);
+
+        gainNode.gain.setValueAtTime(0.2, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        osc.connect(gainNode);
+        osc2.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        osc.start();
+        osc2.start();
+        osc.stop(now + duration);
+        osc2.stop(now + duration);
+
+        setTimeout(() => audioCtx.close(), (duration + 0.1) * 1000);
+      } else if (theme === 'green-lantern') {
         // Futuristic Green Lantern Power Ring / Emerald Energy construct sound
         const osc = audioCtx.createOscillator();
         const osc2 = audioCtx.createOscillator();
